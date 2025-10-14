@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>January Week 1 – 目標と計画</title>
+  <title>The Boo-riculum – January Week 1</title>
   <meta name="theme-color" content="#7c3aed">
   <link rel="icon" type="image/png" href="booha-ghost.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --radius:28px; --maxw:1200px;
+      --radius:28px;
       --bg:url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
     }
     *{box-sizing:border-box;margin:0;padding:0}
@@ -16,13 +17,14 @@
     body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:var(--bg);background-size:cover;background-position:center;opacity:.2}
 
     header{text-align:center;color:#fff;margin-bottom:20px;}
-    header h1{font-size:clamp(22px,4vw,42px);margin-bottom:6px;font-weight:900;}
-    header h2{font-size:clamp(18px,3vw,28px);font-weight:600;color:#dbeafe;}
+    header h1{font-family:'Cinzel',serif;font-size:clamp(26px,4.5vw,50px);letter-spacing:1px;margin-bottom:10px;font-weight:900;}
+    header h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:6px;font-weight:800;}
+    header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 
-    .card-outer{width:min(90vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
+    .card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
     .card{position:relative;width:100%;height:100%;border-radius:var(--radius);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);box-shadow:0 30px 80px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.25);}
     .card.is-back{transform:rotateY(180deg)}
-    .face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:1rem;background:rgba(255,255,255,.9);}
+    .face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:1rem;background:rgba(255,255,255,.95);}
     .face.back{transform:rotateY(180deg)}
     .term h2{margin:0;font-size:clamp(40px,8vw,90px);font-weight:900;line-height:1.1;color:#111;}
     .term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#444;}
@@ -35,8 +37,9 @@
 </head>
 <body>
   <header>
-    <h1>January Week‑1</h1>
-    <h2>目標と計画</h2>
+    <h1>The Boo-riculum</h1>
+    <h2>January Week 1</h2>
+    <h3>１月第１週</h3>
   </header>
 
   <div class="card-outer" id="cardOuter">
@@ -79,7 +82,7 @@
 
   function show(){
     const c=CARDS[i];
-    card.style.background=`repeating-linear-gradient(45deg,${c.stripes[0]} 0,${c.stripes[0]} 10%,${c.stripes[1]} 10%,${c.stripes[1]} 20%,${c.stripes[2]} 20%,${c.stripes[2]} 30%)`;
+    card.style.background=`repeating-linear-gradient(45deg,${c.stripes[0]}E6 0,${c.stripes[0]}E6 10%,${c.stripes[1]}E6 10%,${c.stripes[1]}E6 20%,${c.stripes[2]}E6 20%,${c.stripes[2]}E6 30%)`;
     card.style.backgroundSize='200% 200%';
     card.style.animation='bgmove 8s linear infinite';
     frontTitle.textContent=c.en;
