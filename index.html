@@ -13,35 +13,92 @@
       --bg:url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#111;}
-    body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:var(--bg);background-size:cover;background-position:center;opacity:.25}
+    html,body{
+      height:100%;
+      font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
+      background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      color:#111;
+    }
+    body::before{
+      content:"";
+      position:fixed;inset:0;z-index:-1;
+      background-image:var(--bg);
+      background-size:cover;background-position:center;
+      opacity:.25;
+    }
 
     header{text-align:center;color:#fff;margin-bottom:20px;}
-    header h1{font-family:'Cinzel',serif;font-size:clamp(26px,4.5vw,50px);letter-spacing:1px;margin-bottom:10px;font-weight:900;}
+    header h1{
+      font-family:'Cinzel',serif;
+      font-size:clamp(26px,4.5vw,50px);
+      letter-spacing:1px;
+      margin-bottom:10px;
+      font-weight:900;
+    }
     header h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:6px;font-weight:800;}
     header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 
-    .card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
-    .card{position:relative;width:100%;height:100%;border-radius:var(--radius);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);box-shadow:0 30px 80px rgba(0,0,0,.3);border:3px solid rgba(255,255,255,.25);overflow:hidden;}
+    .card-outer{
+      width:min(92vw,900px);
+      aspect-ratio:3/2;
+      perspective:1500px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      position:relative;
+      width:100%;height:100%;
+      border-radius:var(--radius);
+      transform-style:preserve-3d;
+      transition:transform .7s cubic-bezier(.2,.8,.2,1);
+      box-shadow:0 30px 80px rgba(0,0,0,.3);
+      border:3px solid rgba(255,255,255,.25);
+      overflow:hidden;
+    }
     .card.is-back{transform:rotateY(180deg)}
-    .face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:1rem;background:rgba(255,255,255,.85);z-index:1}
+    .face{
+      position:absolute;inset:0;border-radius:var(--radius);
+      backface-visibility:hidden;
+      display:flex;align-items:center;justify-content:center;
+      flex-direction:column;text-align:center;padding:1rem;
+      background:rgba(255,255,255,.85);z-index:1;
+    }
     .face.back{transform:rotateY(180deg)}
-    .term h2{margin:0;font-size:clamp(40px,8vw,90px);font-weight:900;line-height:1.1;color:#111;text-shadow:0 2px 6px rgba(255,255,255,.6);}
+    .term h2{
+      margin:0;
+      font-size:clamp(40px,8vw,90px);
+      font-weight:900;line-height:1.1;color:#111;
+      text-shadow:0 2px 6px rgba(255,255,255,.6);
+    }
     .term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#333;}
 
-    /* moving candy stripe overlay */
-    .stripe{
-      position:absolute;inset:0;z-index:0;
-      background:linear-gradient(45deg,transparent 0%,transparent 45%,rgba(255,255,255,.2) 50%,transparent 55%,transparent 100%);
-      background-size:200% 200%;
-      animation:lineMove 2s linear infinite;
+    /* Single moving stripe animation */
+    .card::before{
+      content:\"\";position:absolute;inset:0;z-index:0;
+      background:repeating-linear-gradient(45deg,transparent 0%,transparent 48%,rgba(255,255,255,.35) 50%,transparent 52%,transparent 100%);
+      background-size:300% 300%;
+      animation:stripeMove 4s linear infinite;
       mix-blend-mode:overlay;
     }
-
-    @keyframes lineMove{from{background-position:0 0;}to{background-position:200% 200%;}}
+    @keyframes stripeMove{
+      0%{background-position:0 0;}
+      100%{background-position:200% 200%;}
+    }
 
     .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;}
-    button.btn{padding:1rem 1.3rem;border-radius:16px;border:none;background:linear-gradient(180deg,#fff,#e0e0e0);box-shadow:0 10px 25px rgba(0,0,0,.15);font-weight:800;cursor:pointer;font-size:1.1rem;}
+    button.btn{
+      padding:1rem 1.3rem;
+      border-radius:16px;border:none;
+      background:linear-gradient(180deg,#fff,#e0e0e0);
+      box-shadow:0 10px 25px rgba(0,0,0,.15);
+      font-weight:800;cursor:pointer;font-size:1.1rem;
+    }
   </style>
 </head>
 <body>
@@ -53,9 +110,12 @@
 
   <div class="card-outer" id="cardOuter">
     <article class="card" id="card">
-      <div class="stripe" id="stripe"></div>
-      <div class="face front"><div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div></div>
-      <div class="face back"><div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div></div>
+      <div class="face front">
+        <div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div>
+      </div>
+      <div class="face back">
+        <div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div>
+      </div>
     </article>
   </div>
 
@@ -67,26 +127,25 @@
 
   <script>
   const CARDS=[
-    {en:"goal",jp:"目標",hira:"もくひょう",color:"#ff6ec7"},
-    {en:"plan",jp:"計画",hira:"けいかく",color:"#5ee6ff"},
-    {en:"future",jp:"未来",hira:"みらい",color:"#ffd166"},
-    {en:"dream",jp:"夢",hira:"ゆめ",color:"#8aff80"},
-    {en:"challenge",jp:"挑戦",hira:"ちょうせん",color:"#c77dff"},
-    {en:"try",jp:"挑戦する",hira:"ちょうせん する",color:"#ffaaff"},
-    {en:"change",jp:"変える",hira:"かえる",color:"#ffd166"},
-    {en:"habit",jp:"習慣",hira:"しゅうかん",color:"#5ee6ff"},
-    {en:"exercise",jp:"運動",hira:"うんどう",color:"#8aff80"},
-    {en:"study",jp:"勉強",hira:"べんきょう",color:"#ff7eb9"},
-    {en:"learn",jp:"学ぶ",hira:"まなぶ",color:"#ffd166"},
-    {en:"practice",jp:"練習",hira:"れんしゅう",color:"#c77dff"},
-    {en:"success",jp:"成功",hira:"せいこう",color:"#5ee6ff"},
-    {en:"focus",jp:"集中",hira:"しゅうちゅう",color:"#ffaaff"},
-    {en:"motivation",jp:"やる気",hira:"やるき",color:"#8aff80"}
+    {en:\"goal\",jp:\"目標\",hira:\"もくひょう\",color:\"#ff6ec7\"},
+    {en:\"plan\",jp:\"計画\",hira:\"けいかく\",color:\"#5ee6ff\"},
+    {en:\"future\",jp:\"未来\",hira:\"みらい\",color:\"#ffd166\"},
+    {en:\"dream\",jp:\"夢\",hira:\"ゆめ\",color:\"#8aff80\"},
+    {en:\"challenge\",jp:\"挑戦\",hira:\"ちょうせん\",color:\"#c77dff\"},
+    {en:\"try\",jp:\"挑戦する\",hira:\"ちょうせん する\",color:\"#ffaaff\"},
+    {en:\"change\",jp:\"変える\",hira:\"かえる\",color:\"#ffd166\"},
+    {en:\"habit\",jp:\"習慣\",hira:\"しゅうかん\",color:\"#5ee6ff\"},
+    {en:\"exercise\",jp:\"運動\",hira:\"うんどう\",color:\"#8aff80\"},
+    {en:\"study\",jp:\"勉強\",hira:\"べんきょう\",color:\"#ff7eb9\"},
+    {en:\"learn\",jp:\"学ぶ\",hira:\"まなぶ\",color:\"#ffd166\"},
+    {en:\"practice\",jp:\"練習\",hira:\"れんしゅう\",color:\"#c77dff\"},
+    {en:\"success\",jp:\"成功\",hira:\"せいこう\",color:\"#5ee6ff\"},
+    {en:\"focus\",jp:\"集中\",hira:\"しゅうちゅう\",color:\"#ffaaff\"},
+    {en:\"motivation\",jp:\"やる気\",hira:\"やるき\",color:\"#8aff80\"}
   ];
 
   let i=0,back=false;
   const card=document.getElementById('card');
-  const stripe=document.getElementById('stripe');
   const frontTitle=document.getElementById('frontTitle');
   const backTitle=document.getElementById('backTitle');
   const backSub=document.getElementById('backSub');
@@ -94,7 +153,6 @@
   function show(){
     const c=CARDS[i];
     card.style.background=`linear-gradient(135deg, ${c.color} 0%, #ffffff 100%)`;
-    stripe.style.background=`linear-gradient(45deg, transparent 0%, transparent 45%, ${c.color} 50%, transparent 55%, transparent 100%)`;
     frontTitle.textContent=c.en;
     backTitle.textContent=c.jp;
     backSub.textContent=c.hira;
