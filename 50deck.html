@@ -1,457 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Boo-riculum – School Schedule Deck</title>
-  <link rel="icon" type="image/png" href="booha-ghost.png">
-  <style>
-    :root { --ink:#222; --muted:#444; --accent:#0b78ff; --ok:#22c55e; --bad:#ef4444; }
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
-      color:var(--ink);
-      background:url('Booha card.jpg') center/cover fixed no-repeat;
-    }
-    .wrap{max-width:900px;margin:0 auto;padding:16px 16px 24px;}
-    header{
-      display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
-      margin-bottom:12px;background:rgba(255,255,255,0.88);padding:12px 16px;
-      border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,0.15)
-    }
-    header h1{
-      font-size:18px;margin:0;font-weight:700;letter-spacing:.2px;
-      background:linear-gradient(90deg,#7dd3fc,#60a5fa,#a78bfa,#f472b6);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      display:flex;align-items:center;gap:8px
-    }
-    header h1 img{height:28px;width:auto;}
-    .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-    select,button{
-      background:rgba(255,255,255,0.95);color:var(--ink);border:1px solid #ccc;
-      border-radius:12px;padding:10px 12px;font-size:14px;
-      box-shadow:0 2px 5px rgba(0,0,0,0.08)
-    }
-    button{cursor:pointer;transition:transform .05s ease, background .2s}
-    button:hover{background:#f0f0f0}
-    button:active{transform:scale(.98)}
-    .pill{border:1px solid #ccc;border-radius:999px;padding:6px 10px;font-size:12px;background:rgba(255,255,255,0.7)}
-    .card{
-      user-select:none;-webkit-user-select:none;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      text-align:center;background:url('Booha card.jpg') center/cover no-repeat;
-      border:1px solid #ccc;border-radius:24px;min-height:56vh;margin:16px auto;padding:22px 18px 28px;
-      box-shadow:0 10px 40px rgba(0,0,0,.25); position:relative;
-    }
-    .brand{
-      position:absolute;top:10px;left:12px;display:flex;gap:8px;align-items:center;
-      background:rgba(255,255,255,0.85);padding:6px 10px;border-radius:12px;border:1px solid #ddd;
-      box-shadow:0 2px 6px rgba(0,0,0,0.08); font-weight:800; letter-spacing:.2px;
-    }
-    .brand img{height:20px;width:auto}
-    .brand span{background:linear-gradient(90deg,#7dd3fc,#60a5fa,#a78bfa,#f472b6);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .label{color:var(--muted);font-size:13px;letter-spacing:.3px;margin-bottom:8px;
-      background:rgba(255,255,255,0.7);padding:4px 8px;border-radius:8px}
-    .main{font-size:28px;line-height:1.25;font-weight:800;margin:8px 0 10px;
-      background:rgba(255,255,255,0.86);padding:8px 12px;border-radius:12px}
-    .sub{font-size:18px;opacity:.92;margin:0 0 6px;background:rgba(255,255,255,0.65);
-      padding:4px 10px;border-radius:8px}
-    .hira{font-size:18px;color:var(--accent);opacity:.95;background:rgba(255,255,255,0.75);
-      padding:4px 10px;border-radius:8px}
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-    .footer{
-      display:flex;align-items:center;justify-content:space-between;margin-top:8px;color:var(--muted);font-size:13px;
-      background:rgba(255,255,255,0.85);padding:8px 12px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)
-    }
-    .progress{height:8px;border-radius:999px;background:#eee;overflow:hidden}
-    .progress>span{display:block;height:100%;background:linear-gradient(90deg,#7dd3fc,#60a5fa,#a78bfa,#f472b6);width:0%}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-    @media (max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));} .main{font-size:24px}}
-    a{color:#0b78ff;text-decoration:none}
-    .hidden{display:none}
-    .options{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-    .optbtn{border:1px solid #ccc;border-radius:12px;padding:10px 14px;background:rgba(255,255,255,0.95);cursor:pointer}
-    .optbtn.ok{background:#dcfce7;border-color:#86efac;color:#166534}
-    .optbtn.bad{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Booha 50 – January Week 1</title>
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" href="booha-ghost.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --radius:28px;
+  --ink:#111; --paper:#ffffffee;
+  --pink:#ff7eb9; --blue:#5ee6ff; --yellow:#fff680; --green:#8aff80; --purple:#c77dff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;color:#fff;font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;}
+.wrapper{min-height:100%;display:flex;flex-direction:column;align-items:center}
+
+/* Header */
+header{width:100%;padding:22px 16px 10px;text-align:center}
+header h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(26px,4.8vw,52px)}
+header h2{opacity:.9;font-size:clamp(16px,2.4vw,20px);margin-top:2px}
+.topbar{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:16px auto 8px;
+}
+.topbar a, .topbar button{
+  appearance:none;border:none;border-radius:999px;padding:10px 14px;font-weight:800;
+  color:#000;background:#fff;cursor:pointer;box-shadow:0 6px 18px rgba(255,255,255,.12);
+}
+.topbar a:hover,.topbar button:hover{filter:brightness(1.05)}
+.back{position:fixed;left:10px;top:10px;background:#111;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:999px;text-decoration:none;font-weight:700}
+
+/* Mode tabs */
+.modes{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:8px 0 14px}
+.modes button{
+  background:#191919;border:1px solid #333;color:#ddd;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer
+}
+.modes button.active{background:#39e08f;color:#061b10;border-color:#39e08f}
+
+/* Card area */
+.stage{display:flex;flex-direction:column;align-items:center;gap:16px;padding:10px 16px 40px;width:100%}
+.card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center}
+.card{
+  position:relative;width:100%;height:100%;border-radius:var(--radius);
+  transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+  border:3px solid rgba(255,255,255,.24);
+  background-size:400% 400%;
+  animation:stripeMove 12s linear infinite;
+}
+@keyframes stripeMove{from{background-position:0 0}to{background-position:400% 400%}}
+.card.is-back{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;
+  padding:1rem;background:var(--paper);color:var(--ink)
+}
+.face.back{transform:rotateY(180deg)}
+.term h2{font-size:clamp(26px,3.8vw,44px);font-weight:900;line-height:1.25}
+.term p{margin-top:.6rem;font-size:clamp(18px,2.5vw,26px);opacity:.9}
+
+.controls{display:flex;gap:12px;justify-content:center}
+.btn{
+  padding:12px 16px;border-radius:14px;border:none;background:linear-gradient(180deg,#fff,#eaeaea);
+  font-weight:800;cursor:pointer;color:#111;box-shadow:0 10px 25px rgba(0,0,0,.18)
+}
+
+/* Quiz */
+.quiz-wrap{width:min(94vw,900px);background:#0b0b0b;border:1px solid #333;border-radius:18px;padding:16px}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.qprog{font-weight:800}
+.q{background:#121212;border:1px solid #2c2c2c;border-radius:14px;padding:16px}
+.q h3{font-size:clamp(18px,2.4vw,22px);margin-bottom:10px}
+.opts{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0}
+.opt{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:12px;cursor:pointer;font-weight:700;color:#eee}
+.opt.correct{border-color:#22c55e;background:#112a19}
+.opt.wrong{border-color:#ef4444;background:#2a1111}
+.explain{margin-top:10px;color:#ddd}
+.qnav{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.score{margin-top:8px;font-weight:800}
+
+/* helper */
+.hidden{display:none}
+.small{font-size:.9rem;opacity:.9}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1><img src="booha-ghost.png" alt="Booha ghost"> Boo-riculum – School Schedule</h1>
-      <div class="controls">
-        <select id="mode" aria-label="Mode">
-          <option value="vocab-j2e">Vocab: 🇯🇵 → 🇺🇸</option>
-          <option value="vocab-e2j">Vocab: 🇺🇸 → 🇯🇵</option>
-          <option value="sentences">Sentences (practice)</option>
-          <option value="qa">Questions (practice)</option>
-          <option value="quiz">Quiz (multiple choice)</option>
-        </select>
-      </div>
-    </header>
+<a class="back" href="index.html">⟵ Back to Menu</a>
+<div class="wrapper">
+  <header>
+    <h1>The Boo-riculum / ブー・リキュラム</h1>
+    <h2>January Week 1 – New Beginnings & Goals ／ １月第１週：新しい始まりと目標</h2>
+  </header>
 
-    <div id="card" class="card" role="button" aria-label="flashcard" tabindex="0">
-      <div class="brand"><img src="booha-ghost.png" alt="Booha ghost"><span>Boo-riculum</span></div>
-      <div id="label" class="label">Front</div>
-      <div id="main" class="main">—</div>
-      <div id="sub" class="sub muted">Tap or press Space to flip</div>
-      <div id="hira" class="hira hidden"></div>
-      <div id="mcArea" class="options hidden"></div>
-    </div>
-
-    <div class="footer">
-      <div class="row">
-        <span class="pill" title="Left / Right keys">Keyboard: ← →</span>
-        <span class="pill" title="Space to flip">Space = Flip</span>
-        <button id="btnPrev" title="← or swipe right">◀︎ Prev</button>
-        <button id="btnFlip" title="Tap / Space">Flip</button>
-        <button id="btnNext" title="→ or swipe left">Next ▶︎</button>
-        <button id="btnShuffle" title="Shuffle deck">Shuffle</button>
-      </div>
-      <div style="min-width:180px;text-align:right">
-        <div id="counter" class="muted">0 / 0</div>
-        <div class="progress" aria-hidden="true"><span id="bar"></span></div>
-      </div>
-    </div>
-
-    <section style="margin-top:18px">
-      <details>
-        <summary class="muted">Deck contents & teacher notes</summary>
-        <div class="grid" style="margin-top:10px">
-          <div><strong>Vocab (13)</strong><br>
-            class / 授業（べんきょうのじかん）<br>
-            break / 休み時間（やすむじかん）<br>
-            lunch / 昼食（おひるごはん）<br>
-            period / 時間帯（じかんのぶん）<br>
-            morning / 午前（ごぜん）<br>
-            afternoon / 午後（ごご）<br>
-            Monday / 月曜日（げつようび）<br>
-            Tuesday / 火曜日（かようび）<br>
-            Wednesday / 水曜日（すいようび）<br>
-            Thursday / 木曜日（もくようび）<br>
-            Friday / 金曜日（きんようび）<br>
-            Saturday / 土曜日（どようび）<br>
-            Sunday / 日曜日（にちようび）
-          </div>
-          <div><strong>Sentences (12)</strong><br>
-            It’s 10:00. / 今は10時です。<br>
-            It’s 2:30. / 今は2時半です。<br>
-            The class starts at 9:00. / クラスは9時に始まります。<br>
-            We have a break at 10:30. / 私たちは10時半に休憩を取ります。<br>
-            Lunch is at 12:00. / 昼ごはんは12時です。<br>
-            The afternoon class starts at 1:00. / 午後のクラスは1時に始まります。<br>
-            My English class is on Monday. / 私の英語のクラスは月曜日です。<br>
-            We have art on Wednesday. / 水曜日に美術があります。<br>
-            I have physical education on Thursday. / 木曜日に体育の授業があります。<br>
-            Friday is our last day of the week. / 金曜日は私たちの一週間の最後の日です。<br>
-            I enjoy my lunch break. / 昼休みが楽しいです。<br>
-            We have 5 periods today. / 今日は5時間目があります。
-          </div>
-          <div><strong>Tips</strong><br>
-            • Use <em>Vocab</em> for quick output drills (JP→EN or EN→JP).<br>
-            • Move to <em>Sentences</em> for controlled production (shows kana on front/back).<br>
-            • Use <em>Questions</em> for pair Q&A (answers not MC).<br>
-            • Finish with <em>Quiz</em> (4 options: 1 correct + 3 wrong, instant reveal → auto-flip).<br>
-            • Simple Japanese (kana) shows under Japanese lines.
-          </div>
-        </div>
-      </details>
-    </section>
+  <div class="modes">
+    <button class="tab active" data-mode="vocab">① Vocabulary 語彙 (20)</button>
+    <button class="tab" data-mode="sentences">② Sentences 文 (20)</button>
+    <button class="tab" data-mode="questions">③ Questions 質問 (20)</button>
+    <button class="tab" data-mode="quiz">④ Quiz クイズ (20)</button>
   </div>
 
-  <script>
-    // ---------------- Data ----------------
-    const VOCAB = [
-      { en: 'class',      ja: '授業',     hira: 'べんきょうの じかん' },
-      { en: 'break',      ja: '休み時間', hira: 'やすむ じかん' },
-      { en: 'lunch',      ja: '昼食',     hira: 'おひるごはん' },
-      { en: 'period',     ja: '時間帯',   hira: 'じかん の ぶん' },
-      { en: 'morning',    ja: '午前',     hira: 'ごぜん' },
-      { en: 'afternoon',  ja: '午後',     hira: 'ごご' },
-      { en: 'Monday',     ja: '月曜日',   hira: 'げつようび' },
-      { en: 'Tuesday',    ja: '火曜日',   hira: 'かようび' },
-      { en: 'Wednesday',  ja: '水曜日',   hira: 'すいようび' },
-      { en: 'Thursday',   ja: '木曜日',   hira: 'もくようび' },
-      { en: 'Friday',     ja: '金曜日',   hira: 'きんようび' },
-      { en: 'Saturday',   ja: '土曜日',   hira: 'どようび' },
-      { en: 'Sunday',     ja: '日曜日',   hira: 'にちようび' },
-    ];
+  <!-- Cards Stage -->
+  <section class="stage" id="cardsStage">
+    <div class="card-outer">
+      <article class="card" id="card">
+        <div class="face front">
+          <div class="term">
+            <h2 id="frontTitle"></h2>
+            <p id="frontSub" class="small"></p>
+          </div>
+        </div>
+        <div class="face back">
+          <div class="term">
+            <h2 id="backTitle"></h2>
+            <p id="backSub"></p>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="controls">
+      <button class="btn" id="prevBtn">❮ Prev</button>
+      <button class="btn" id="flipBtn">Flip ⤾</button>
+      <button class="btn" id="nextBtn">Next ❯</button>
+    </div>
+  </section>
 
-    const SENTENCES = [
-      { en:'It’s 10:00.', ja:'今は10時です。', hira:'いまは じゅうじ です。' },
-      { en:'It’s 2:30.', ja:'今は2時半です。', hira:'いまは にじ はん です。' },
-      { en:'The class starts at 9:00.', ja:'クラスは9時に始まります。', hira:'クラスは くじに はじまります。' },
-      { en:'We have a break at 10:30.', ja:'私たちは10時半に休憩を取ります。', hira:'わたしたちは じゅうじ はんに きゅうけいを とります。' },
-      { en:'Lunch is at 12:00.', ja:'昼ごはんは12時です。', hira:'ひるごはんは じゅうにじ です。' },
-      { en:'The afternoon class starts at 1:00.', ja:'午後のクラスは1時に始まります。', hira:'ごごの クラスは いちじに はじまります。' },
-      { en:'My English class is on Monday.', ja:'私の英語のクラスは月曜日です。', hira:'わたしの えいごの クラスは げつようび です。' },
-      { en:'We have art on Wednesday.', ja:'水曜日に美術があります。', hira:'すいようびに びじゅつが あります。' },
-      { en:'I have physical education on Thursday.', ja:'木曜日に体育の授業があります。', hira:'もくようびに たいいくの じゅぎょうが あります。' },
-      { en:'Friday is our last day of the week.', ja:'金曜日は私たちの一週間の最後の日です。', hira:'きんようびは わたしたちの いっしゅうかんの さいごの ひ です。' },
-      { en:'I enjoy my lunch break.', ja:'昼休みが楽しいです。', hira:'ひるやすみが たのしい です。' },
-      { en:'We have 5 periods today.', ja:'今日は5時間目があります。', hira:'きょうは ご じかんめ が あります。' },
-    ];
+  <!-- Quiz Stage -->
+  <section class="stage hidden" id="quizStage">
+    <div class="quiz-wrap">
+      <div class="qtop">
+        <div class="qprog" id="qprog">1 / 20</div>
+        <div class="score" id="score">Score: 0</div>
+      </div>
+      <div class="q" id="qbox">
+        <h3 id="qtext"></h3>
+        <div class="opts" id="opts"></div>
+        <div class="explain" id="explain"></div>
+        <div class="qnav">
+          <button class="btn" id="nextQ">Next ❯</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
-    const QA = [
-      { q_en:'What time is it now?', q_ja:'今は何時ですか。', q_hira:'いまは なんじ ですか。',
-        a_en:'It’s 10:00.', a_ja:'今は10時です。', a_hira:'いまは じゅうじ です。' },
-      { q_en:'What time is it now?', q_ja:'今は何時ですか。', q_hira:'いまは なんじ ですか。',
-        a_en:'It’s 2:30.', a_ja:'今は2時半です。', a_hira:'いまは にじ はん です。' },
-      { q_en:'When does the class start?', q_ja:'クラスは何時に始まりますか。', q_hira:'クラスは なんじに はじまりますか。',
-        a_en:'The class starts at 9:00.', a_ja:'クラスは9時に始まります。', a_hira:'クラスは くじに はじまります。' },
-      { q_en:'When is the break?', q_ja:'休憩は何時ですか。', q_hira:'きゅうけいは なんじ ですか。',
-        a_en:'We have a break at 10:30.', a_ja:'私たちは10時半に休憩を取ります。', a_hira:'わたしたちは じゅうじ はんに きゅうけいを とります。' },
-      { q_en:'When is lunch?', q_ja:'昼ごはんは何時ですか。', q_hira:'ひるごはんは なんじ ですか。',
-        a_en:'Lunch is at 12:00.', a_ja:'昼ごはんは12時です。', a_hira:'ひるごはんは じゅうにじ です。' },
-      { q_en:'When does the afternoon class start?', q_ja:'午後のクラスは何時に始まりますか。', q_hira:'ごごの クラスは なんじに はじまりますか。',
-        a_en:'The afternoon class starts at 1:00.', a_ja:'午後のクラスは1時に始まります。', a_hira:'ごごの クラスは いちじに はじまります。' },
-      { q_en:'When is your English class?', q_ja:'英語のクラスは何曜日ですか。', q_hira:'えいごの クラスは なにようび ですか。',
-        a_en:'My English class is on Monday.', a_ja:'私の英語のクラスは月曜日です。', a_hira:'わたしの えいごの クラスは げつようび です。' },
-      { q_en:'What do we have on Wednesday?', q_ja:'水曜日には何の授業がありますか。', q_hira:'すいようびには なにの じゅぎょうが ありますか。',
-        a_en:'We have art on Wednesday.', a_ja:'水曜日に美術があります。', a_hira:'すいようびに びじゅつが あります。' },
-      { q_en:'What class do you have on Thursday?', q_ja:'木曜日には何の授業がありますか。', q_hira:'もくようびには なにの じゅぎょうが ありますか。',
-        a_en:'I have physical education on Thursday.', a_ja:'木曜日に体育の授業があります。', a_hira:'もくようびに たいいくの じゅぎょうが あります。' },
-      { q_en:'What is our last day of the week?', q_ja:'一週間の最後の日は何曜日ですか。', q_hira:'いっしゅうかん の さいご の ひ は なにようび ですか。',
-        a_en:'Friday is our last day of the week.', a_ja:'金曜日は私たちの一週間の最後の日です。', a_hira:'きんようびは わたしたちの いっしゅうかんの さいごの ひ です。' },
-      { q_en:'How do you feel about your lunch break?', q_ja:'昼休みはどう感じますか。', q_hira:'ひるやすみは どう かんじますか。',
-        a_en:'I enjoy my lunch break.', a_ja:'昼休みが楽しいです。', a_hira:'ひるやすみが たのしい です。' },
-      { q_en:'How many periods do we have today?', q_ja:'今日は何時間目がありますか。', q_hira:'きょうは なん じかんめが ありますか。',
-        a_en:'We have 5 periods today.', a_ja:'今日は5時間目があります。', a_hira:'きょうは ご じかんめが あります。' },
-    ];
+<script>
+// ---------- CONTENT ----------
+// Booha diagonal stripes per card
+function stripes(a,b,c){
+  return `repeating-linear-gradient(45deg,
+    ${a} 0%, ${a} 3%,
+    ${b} 3%, ${b} 6%,
+    ${c} 6%, ${c} 9%)`;
+}
 
-    // Quiz with exactly 4 options (1 correct + 3 wrong)
-    const QUIZ = [
-      { prompt:'Choose the correct time: It’s ____.', correct:'10:00', jp:'今は10時です。', hira:'いまは じゅうじ です。', full:'It’s 10:00.' },
-      { prompt:'Choose the correct time: It’s ____.', correct:'2:30', jp:'今は2時半です。', hira:'いまは にじ はん です。', full:'It’s 2:30.' },
-      { prompt:'When does the class start? ____', correct:'9:00', jp:'クラスは9時に始まります。', hira:'クラスは くじに はじまります。', full:'The class starts at 9:00.' },
-      { prompt:'When is the break? ____', correct:'10:30', jp:'私たちは10時半に休憩を取ります。', hira:'わたしたちは じゅうじ はんに きゅうけいを とります。', full:'We have a break at 10:30.' },
-      { prompt:'When is lunch? ____', correct:'12:00', jp:'昼ごはんは12時です。', hira:'ひるごはんは じゅうにじ です。', full:'Lunch is at 12:00.' },
-      { prompt:'When does the afternoon class start? ____', correct:'1:00', jp:'午後のクラスは1時に始まります。', hira:'ごごの クラスは いちじに はじまります。', full:'The afternoon class starts at 1:00.' },
-      { prompt:'Your English class is on ____.', correct:'Monday', jp:'私の英語のクラスは月曜日です。', hira:'げつようび です。', full:'My English class is on Monday.' },
-      { prompt:'We have art on ____.', correct:'Wednesday', jp:'水曜日に美術があります。', hira:'すいようびに びじゅつが あります。', full:'We have art on Wednesday.' },
-      { prompt:'I have physical education on ____.', correct:'Thursday', jp:'木曜日に体育の授業があります。', hira:'もくようびに たいいくの じゅぎょうが あります。', full:'I have physical education on Thursday.' },
-      { prompt:'Our last day of the week is ____.', correct:'Friday', jp:'金曜日は私たちの一週間の最後の日です。', hira:'きんようびは さいごの ひ です。', full:'Friday is our last day of the week.' },
-      { prompt:'I enjoy my ____ break.', correct:'lunch', jp:'昼休みが楽しいです。', hira:'ひるやすみが たのしい です。', full:'I enjoy my lunch break.' },
-      { prompt:'Today we have ____ periods.', correct:'5', jp:'今日は5時間目があります。', hira:'きょうは ご じかんめが あります。', full:'We have 5 periods today.' },
-    ];
+// ① Vocabulary (20)  EN -> JP + HIRA
+const VOCAB = [
+  {en:"goal", jp:"目標", hira:"もくひょう", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"plan", jp:"計画", hira:"けいかく", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"resolution", jp:"決意", hira:"けつい", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"habit", jp:"習慣", hira:"しゅうかん", stripes:[ "#8aff80","#ff7eb9","#c77dff" ]},
+  {en:"routine", jp:"日課", hira:"にっか", stripes:[ "#5ee6ff","#ff7eb9","#fff680" ]},
+  {en:"schedule", jp:"予定", hira:"よてい", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"deadline", jp:"締め切り", hira:"しめきり", stripes:[ "#fff680","#c77dff","#5ee6ff" ]},
+  {en:"progress", jp:"進歩", hira:"しんぽ", stripes:[ "#8aff80","#fff680","#5ee6ff" ]},
+  {en:"effort", jp:"努力", hira:"どりょく", stripes:[ "#ff7eb9","#8aff80","#fff680" ]},
+  {en:"focus", jp:"集中", hira:"しゅうちゅう", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"motivation", jp:"やる気", hira:"やるき", stripes:[ "#8aff80","#5ee6ff","#ff7eb9" ]},
+  {en:"challenge", jp:"挑戦", hira:"ちょうせん", stripes:[ "#c77dff","#fff680","#5ee6ff" ]},
+  {en:"success", jp:"成功", hira:"せいこう", stripes:[ "#5ee6ff","#8aff80","#ff7eb9" ]},
+  {en:"mistake", jp:"間違い", hira:"まちがい", stripes:[ "#fff680","#ff7eb9","#8aff80" ]},
+  {en:"improve", jp:"上達する", hira:"じょうたつ する", stripes:[ "#5ee6ff","#8aff80","#c77dff" ]},
+  {en:"practice", jp:"練習", hira:"れんしゅう", stripes:[ "#ff7eb9","#fff680","#5ee6ff" ]},
+  {en:"exercise", jp:"運動", hira:"うんどう", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"study", jp:"勉強", hira:"べんきょう", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"promise", jp:"約束", hira:"やくそく", stripes:[ "#fff680","#5ee6ff","#ff7eb9" ]},
+  {en:"reward", jp:"ごほうび", hira:"ごほうび", stripes:[ "#5ee6ff","#fff680","#8aff80" ]}
+];
 
-    // -------------- State & Elements --------------
-    let deck = [];
-    let index = 0;
-    let showingFront = true;
+// ② Sentences (20)  EN -> JP + HIRA  (varied tenses)
+const SENTENCES = [
+  {en:"I will study every day.", jp:"毎日勉強します。", hira:"まいにち べんきょう します", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"I’m going to try something new.", jp:"新しいことに挑戦します。", hira:"あたらしい こと に ちょうせん します", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"I will do my best this year.", jp:"今年は全力を尽くします。", hira:"ことし は ぜんりょく を つくし ます", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"I will make a new friend.", jp:"新しい友だちを作ります。", hira:"あたらしい ともだち を つくり ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will not be late anymore.", jp:"もう遅刻しません。", hira:"もう ちこく しません", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"I will help my classmates.", jp:"クラスメイトを手伝います。", hira:"クラスメイト を てつだい ます", stripes:[ "#fff680","#8aff80","#c77dff" ]},
+  {en:"I will clean my desk today.", jp:"今日は机を片づけます。", hira:"きょう は つくえ を かたづけ ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I will read more books.", jp:"もっと本を読みます。", hira:"もっと ほん を よみ ます", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"I will start a good habit.", jp:"良い習慣を始めます。", hira:"よい しゅうかん を はじめ ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will speak more English.", jp:"もっと英語を話します。", hira:"もっと えいご を はなし ます", stripes:[ "#fff680","#5ee6ff","#c77dff" ]},
+  {en:"I will write in my diary every week.", jp:"毎週日記を書きます。", hira:"まいしゅう にっき を かき ます", stripes:[ "#ff7eb9","#8aff80","#fff680" ]},
+  {en:"I will wake up earlier.", jp:"もっと早く起きます。", hira:"もっと はやく おき ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I will listen carefully in class.", jp:"授業でしっかり聞きます。", hira:"じゅぎょう で しっかり きき ます", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"I will smile more.", jp:"もっと笑います。", hira:"もっと わらい ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will enjoy learning.", jp:"学ぶことを楽しみます。", hira:"まなぶ こと を たのしみ ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I’m going to join a club this semester.", jp:"今学期はクラブに入るつもりです。", hira:"こんがっき は くらぶ に はいる つもり です", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"I’m meeting my friend to plan our goals.", jp:"友だちと目標を計画するために会います。", hira:"ともだち と もくひょう を けいかく する ため に あい ます", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"By March, I will have read five books.", jp:"３月までに本を５冊読んでいるつもりです。", hira:"さんがつ まで に ほん を ごさつ よんで いる つもり です", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"I might start running on weekends.", jp:"週末に走り始めるかもしれません。", hira:"しゅうまつ に はしり はじめる かも しれません", stripes:[ "#ff7eb9","#c77dff","#5ee6ff" ]},
+  {en:"I have decided to keep a study journal.", jp:"勉強ノートを続けることに決めました。", hira:"べんきょう のーと を つづける こと に きめ ました", stripes:[ "#fff680","#5ee6ff","#8aff80" ]}
+];
 
-    const els = {
-      mode: document.getElementById('mode'),
-      card: document.getElementById('card'),
-      label: document.getElementById('label'),
-      main: document.getElementById('main'),
-      sub: document.getElementById('sub'),
-      hira: document.getElementById('hira'),
-      counter: document.getElementById('counter'),
-      bar: document.getElementById('bar'),
-      btnPrev: document.getElementById('btnPrev'),
-      btnNext: document.getElementById('btnNext'),
-      btnFlip: document.getElementById('btnFlip'),
-      btnShuffle: document.getElementById('btnShuffle'),
-      mcArea: document.getElementById('mcArea'),
+// ③ Questions (20)  EN Q -> JP back
+const QUESTIONS = [
+  {en:"What goal will you set this month?", jp:"今月はどんな目標を立てますか。", hira:"こんげつ は どんな もくひょう を たて ます か", stripes:[ "#5ee6ff","#ff7eb9","#fff680" ]},
+  {en:"Are you going to try something new this week?", jp:"今週、新しいことに挑戦しますか。", hira:"こんしゅう あたらしい こと に ちょうせん します か", stripes:[ "#8aff80","#5ee6ff","#c77dff" ]},
+  {en:"When will you start your new habit?", jp:"新しい習慣はいつ始めますか。", hira:"あたらしい しゅうかん は いつ はじめ ます か", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"How will you practice English every day?", jp:"毎日どうやって英語を練習しますか。", hira:"まいにち どうやって えいご を れんしゅう します か", stripes:[ "#ff7eb9","#5ee6ff","#8aff80" ]},
+  {en:"Who will help you reach your goal?", jp:"目標を達成するのを誰が手伝いますか。", hira:"もくひょう を たっせい する の を だれ が てつだい ます か", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"What are you doing this weekend to improve yourself?", jp:"今週末は自分を伸ばすために何をしますか。", hira:"こんしゅうまつ は じぶん を のばす ため に なに を します か", stripes:[ "#8aff80","#ff7eb9","#5ee6ff" ]},
+  {en:"Where will you study after school today?", jp:"今日放課後はどこで勉強しますか。", hira:"きょう ほうかご は どこ で べんきょう します か", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"Why did you choose that goal?", jp:"なぜその目標を選びましたか。", hira:"なぜ その もくひょう を えらび ました か", stripes:[ "#5ee6ff","#ff7eb9","#8aff80" ]},
+  {en:"How many books will you read this year?", jp:"今年は本を何冊読みますか。", hira:"ことし は ほん を なんさつ よみ ます か", stripes:[ "#c77dff","#fff680","#5ee6ff" ]},
+  {en:"What will you stop doing to save time?", jp:"時間を節約するために何をやめますか。", hira:"じかん を せつやく する ため に なに を やめ ます か", stripes:[ "#5ee6ff","#8aff80","#fff680" ]},
+  {en:"Are you going to join a club this semester?", jp:"今学期はクラブに入りますか。", hira:"こんがっき は くらぶ に はい ります か", stripes:[ "#ff7eb9","#5ee6ff","#c77dff" ]},
+  {en:"What will you do if you make a mistake?", jp:"もし間違えたらどうしますか。", hira:"もし まちがえ たら どう します か", stripes:[ "#8aff80","#fff680","#5ee6ff" ]},
+  {en:"Who are you meeting to plan your goals?", jp:"目標を計画するために誰と会いますか。", hira:"もくひょう を けいかく する ため に だれ と あい ます か", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"When are you going to start your routine?", jp:"いつ日課を始めますか。", hira:"いつ にっか を はじめ ます か", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"What will you do better than last year?", jp:"去年より何をもっと上手にしますか。", hira:"きょねん より なに を もっと じょうず に します か", stripes:[ "#5ee6ff","#ff7eb9","#8aff80" ]},
+  {en:"How will you reward yourself?", jp:"どうやって自分にごほうびをあげますか。", hira:"どうやって じぶん に ごほうび を あげ ます か", stripes:[ "#c77dff","#5ee6ff","#fff680" ]},
+  {en:"What are you not going to do this year?", jp:"今年は何をしないつもりですか。", hira:"ことし は なに を しない つもり です か", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"How will you track your progress?", jp:"進歩をどうやって記録しますか。", hira:"しんぽ を どうやって きろく します か", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"Which habit will be the hardest to keep?", jp:"どの習慣が一番続けにくいですか。", hira:"どの しゅうかん が いちばん つづけ にくい です か", stripes:[ "#ff7eb9","#5ee6ff","#8aff80" ]},
+  {en:"What will you learn first?", jp:"最初に何を学びますか。", hira:"さいしょ に なに を まなび ます か", stripes:[ "#5ee6ff","#fff680","#c77dff" ]}
+];
+
+// ④ Quiz (20) – grammar/usage around will / going to / habits / time
+const QUIZ = [
+  {q:"I ___ write my goals tonight.", opts:["am going","am going to","will","going to"], a:2, ex:"Decision at the moment: use will."},
+  {q:"She is ___ start a diary next week.", opts:["going to","will to","go to","going"], a:0, ex:"Planned intention → going to + base verb."},
+  {q:"We ___ late anymore.", opts:["won't be","aren't be","don't be","not be"], a:0, ex:"Negative future of be → won't be."},
+  {q:"What are you ___ this weekend?", opts:["do","doing","did","done"], a:1, ex:"Present continuous for near-future plan."},
+  {q:"By March, I ___ five books.", opts:["will read","am read","will have read","have read"], a:2, ex:"Future perfect → will have read."},
+  {q:"He ___ to join the basketball club.", opts:["will","is going","is going to","going"], a:2, ex:"is going to + verb."},
+  {q:"I think she ___ enjoy the class.", opts:["is going to","going","am going to","are going"], a:0, ex:"Prediction based on evidence → going to is fine; also 'will' possible, but key is A."},
+  {q:"I promise I ___ my best.", opts:["will do","am doing","going to do","do"], a:0, ex:"Promises → will."},
+  {q:"What time ___ you start your new routine?", opts:["are","do","will","did"], a:2, ex:"Asking about a planned time in future → will (could use 'are you going to' but choice set favours 'will')."},
+  {q:"He ___ coffee every morning.", opts:["will drink","drinks","is drinking","going to drink"], a:1, ex:"Habit → simple present."},
+  {q:"I ___ help you after school.", opts:["am going to","go to","am going","be going"], a:0, ex:"Intention already decided."},
+  {q:"They ___ a mistake if they rush.", opts:["will make","are making","make","going to make"], a:0, ex:"Future result → will."},
+  {q:"Where ___ you study today?", opts:["are","do","will","is"], a:2, ex:"Future plan question → will (or 'are you going to')."},
+  {q:"She ___ late because she set an alarm.", opts:["won't be","isn't being","doesn't be","isn't"], a:0, ex:"Future negative of be."},
+  {q:"I ___ a good habit this month.", opts:["start","am starting","will starting","to start"], a:1, ex:"Planned/arranged → present continuous future."},
+  {q:"If I have time, I ___ read more.", opts:["am going to","will","going","am"], a:1, ex:"Conditional future → will."},
+  {q:"We ___ our goals on Sunday.", opts:["discuss","are going to discuss","will discussing","going to discuss"], a:1, ex:"Clear plan → going to + base."},
+  {q:"___ you join any club this year?", opts:["Do","Did","Will","Are"], a:2, ex:"Future decision → Will you…?"},
+  {q:"I’m not sure, but I ___ start running.", opts:["will","am","am going to","might"], a:3, ex:"Modal of possibility fits best here."},
+  {q:"By the end of the week, she ___ her desk.", opts:["will tidy","will have tidied","is tidying","has tidy"], a:1, ex:"Completed before a point in future → future perfect."}
+];
+
+// ---------- APP STATE ----------
+let MODE = "vocab"; // vocab | sentences | questions | quiz
+let idx = 0, flipped = false, score = 0, qIndex = 0;
+const card = document.getElementById('card');
+const frontTitle = document.getElementById('frontTitle');
+const frontSub = document.getElementById('frontSub');
+const backTitle = document.getElementById('backTitle');
+const backSub = document.getElementById('backSub');
+
+const cardsStage = document.getElementById('cardsStage');
+const quizStage  = document.getElementById('quizStage');
+const qprog = document.getElementById('qprog');
+const scoreEl = document.getElementById('score');
+const qtext = document.getElementById('qtext');
+const opts = document.getElementById('opts');
+const explain = document.getElementById('explain');
+
+// ---------- HELPERS ----------
+function activeList(){
+  if (MODE==="vocab") return VOCAB;
+  if (MODE==="sentences") return SENTENCES;
+  if (MODE==="questions") return QUESTIONS;
+  return [];
+}
+function renderCard(){
+  const list = activeList();
+  const item = list[idx];
+  card.style.background = stripes(item.stripes[0], item.stripes[1], item.stripes[2]);
+
+  if (MODE==="vocab"){
+    frontTitle.textContent = item.en;
+    frontSub.textContent = "";
+    backTitle.textContent  = `${item.jp}`;
+    backSub.textContent    = `(${item.hira})`;
+  } else {
+    // sentences & questions: EN front; JP + kana back
+    frontTitle.textContent = item.en;
+    frontSub.textContent = "";
+    backTitle.textContent  = item.jp;
+    backSub.textContent    = `(${item.hira})`;
+  }
+  card.classList.toggle('is-back', flipped);
+}
+function setMode(m){
+  // toggle active button
+  document.querySelectorAll('.modes button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.mode===m);
+  });
+  MODE = m; idx = 0; flipped = false;
+  if (MODE==="quiz"){
+    cardsStage.classList.add('hidden');
+    quizStage.classList.remove('hidden');
+    startQuiz();
+  } else {
+    quizStage.classList.add('hidden');
+    cardsStage.classList.remove('hidden');
+    renderCard();
+  }
+}
+
+// ---------- QUIZ ----------
+function startQuiz(){
+  score = 0; qIndex = 0;
+  scoreEl.textContent = `Score: ${score}`;
+  explain.textContent = "";
+  showQ();
+}
+function showQ(){
+  const item = QUIZ[qIndex];
+  qprog.textContent = `${qIndex+1} / ${QUIZ.length}`;
+  qtext.textContent = item.q;
+  opts.innerHTML = "";
+  explain.textContent = "";
+  item.opts.forEach((t,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = t;
+    b.onclick = () => {
+      const correct = i===item.a;
+      b.classList.add(correct?'correct':'wrong');
+      if (correct) score++;
+      scoreEl.textContent = `Score: ${score}`;
+      // lock others
+      [...opts.children].forEach(btn=>btn.disabled=true);
+      explain.textContent = item.ex;
     };
+    opts.appendChild(b);
+  });
+}
+document.getElementById('nextQ').addEventListener('click', ()=>{
+  if (qIndex < QUIZ.length-1){ qIndex++; showQ(); }
+  else {
+    qtext.textContent = "Finished! Great job.";
+    opts.innerHTML = "";
+    explain.innerHTML = `Your final score is <b>${score}</b> / ${QUIZ.length}.`;
+  }
+});
 
-    function shuffle(arr){
-      for(let i=arr.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]]=[arr[j],arr[i]];
-      }
-      return arr;
-    }
+// ---------- UI EVENTS ----------
+document.querySelectorAll('.tab').forEach(b=>{
+  b.addEventListener('click',()=>setMode(b.dataset.mode));
+});
+document.getElementById('flipBtn').addEventListener('click', ()=>{flipped=!flipped;renderCard()});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  const list = activeList(); idx = (idx+1) % list.length; flipped=false; renderCard();
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  const list = activeList(); idx = (idx-1+list.length) % list.length; flipped=false; renderCard();
+});
 
-    // -------------- Build Decks --------------
-    function buildDeck(){
-      const mode = els.mode.value;
-      if(mode==='vocab-j2e' || mode==='vocab-e2j'){
-        const data = VOCAB;
-        deck = data.map(x=>({
-          type:'vocab',
-          front: mode==='vocab-j2e' ? x.ja : x.en,
-          back:  mode==='vocab-j2e' ? x.en : x.ja,
-          hira: x.hira,
-          sideLabelFront: mode==='vocab-j2e' ? 'Japanese → English' : 'English → Japanese',
-          sideLabelBack:  mode==='vocab-j2e' ? 'English' : 'Japanese',
-        }));
-      } else if(mode==='sentences'){
-        deck = SENTENCES.map(s=>({
-          type:'sentence',
-          front: s.ja,
-          back: s.en + '\n' + s.ja,
-          hira: s.hira,
-          sideLabelFront: 'Japanese sentence',
-          sideLabelBack: 'Answer (EN + JA)',
-        }));
-      } else if(mode==='qa'){
-        deck = QA.map(q=>({
-          type:'qa',
-          front: q.q_ja,
-          back: q.a_en + '\n' + q.a_ja,
-          hira: q.q_hira + '\n' + q.a_hira,
-          sideLabelFront: 'Question (JA)',
-          sideLabelBack: 'Answer (EN + JA)',
-        }));
-      } else if(mode==='quiz'){
-        deck = QUIZ.map(q=>{
-          const pool = ['10:00','2:30','9:00','10:30','12:00','1:00',
-                        'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-                        'lunch','break','class','period','5'];
-          const wrongs = shuffle(pool.filter(x=>x!==q.correct)).slice(0,3);
-          const choices = shuffle([q.correct, ...wrongs]);
-          return {
-            type:'quiz',
-            front: q.prompt,
-            back: q.full + '\n' + q.jp,
-            hira: q.hira,
-            correct: q.correct,
-            choices,
-            sideLabelFront: 'Multiple choice (4 options)',
-            sideLabelBack: 'Answer (EN + JA)',
-          };
-        });
-      }
-      index = 0; showingFront = true; render();
-    }
-
-    // -------------- Render --------------
-    function render(){
-      if(deck.length===0){ els.main.textContent='—'; els.sub.textContent='No cards'; els.counter.textContent='0 / 0'; return; }
-      const item = deck[index];
-      const mode = els.mode.value;
-      els.label.textContent = showingFront ? item.sideLabelFront : item.sideLabelBack;
-
-      const content = showingFront ? item.front : item.back;
-      if((!showingFront) && (item.type==='qa' || item.type==='quiz' || item.type==='sentence') && content.includes('\n')){
-        const [line1, line2] = content.split('\n');
-        els.main.innerHTML = `<div style="font-size:22px;font-weight:700">${line1}</div>
-                              <div class="sub" style="margin-top:8px">${line2}</div>`;
-        if(item.hira){
-          els.hira.classList.remove('hidden');
-          if(item.type==='qa'){
-            const parts = item.hira.split('\n');
-            els.hira.textContent = showingFront ? parts[0] : (parts[1] || '');
-          } else {
-            els.hira.textContent = item.hira;
-          }
-        } else { els.hira.classList.add('hidden'); els.hira.textContent=''; }
-      } else {
-        els.main.textContent = content;
-        if(showingFront && (item.type==='vocab' && (els.mode.value==='vocab-j2e') || item.type==='sentence' || item.type==='qa')){
-          if(item.hira){
-            els.hira.classList.remove('hidden');
-            if(item.type==='qa' && item.hira.includes('\n')){
-              els.hira.textContent = item.hira.split('\n')[0];
-            } else {
-              els.hira.textContent = item.hira;
-            }
-          } else { els.hira.classList.add('hidden'); els.hira.textContent=''; }
-        } else {
-          els.hira.classList.add('hidden');
-          els.hira.textContent='';
-        }
-      }
-
-      // QUIZ MC only on front
-      if(mode==='quiz' && item.type==='quiz' && showingFront){
-        els.sub.textContent = 'Choose the best answer.';
-        els.mcArea.classList.remove('hidden');
-        els.mcArea.innerHTML = '';
-        item.choices.forEach((opt, i) => {
-          const btn = document.createElement('button');
-          btn.className = 'optbtn';
-          btn.textContent = `${i+1}. ${opt}`;
-          btn.addEventListener('click', (e)=>{
-            e.preventDefault(); e.stopPropagation();
-            const allBtns = [...els.mcArea.querySelectorAll('button')];
-            allBtns.forEach(b=>b.disabled=true);
-            if(opt===item.correct){ btn.classList.add('ok'); } else { btn.classList.add('bad'); }
-            const correctBtn = allBtns.find(b=>b.textContent.endsWith(item.correct));
-            if(correctBtn) correctBtn.classList.add('ok');
-            setTimeout(()=>{ showingFront=false; render(); }, 350);
-          }, { passive:false });
-          els.mcArea.appendChild(btn);
-        });
-      } else {
-        els.mcArea.classList.add('hidden');
-        els.mcArea.innerHTML = '';
-        els.sub.textContent = (item.type==='quiz' && showingFront)
-          ? 'Choose the best answer.'
-          : 'Tap / Space to flip · Swipe / ← → to navigate';
-      }
-
-      els.counter.textContent = `${index+1} / ${deck.length}`;
-      els.bar.style.width = `${((index+1)/deck.length)*100}%`;
-
-      setHash();
-    }
-
-    // -------------- Navigation --------------
-    function prev(){ index = (index-1+deck.length)%deck.length; showingFront=true; render(); }
-    function next(){ index = (index+1)%deck.length; showingFront=true; render(); }
-    function flip(){ showingFront = !showingFront; render(); }
-    function shuffleDeck(){ deck = shuffle(deck); index=0; showingFront=true; render(); }
-
-    document.getElementById('btnPrev').addEventListener('click', prev);
-    document.getElementById('btnNext').addEventListener('click', next);
-    document.getElementById('btnFlip').addEventListener('click', flip);
-    document.getElementById('btnShuffle').addEventListener('click', shuffleDeck);
-    document.getElementById('mode').addEventListener('change', ()=>{ buildDeck(); setHash(); });
-
-    // Keyboard
-    window.addEventListener('keydown', (e)=>{
-      if(e.code==='ArrowLeft'){ e.preventDefault(); prev(); }
-      else if(e.code==='ArrowRight'){ e.preventDefault(); next(); }
-      else if(e.code==='Space'){ e.preventDefault(); flip(); }
-      else if(e.key==='S' || e.key==='s'){ e.preventDefault(); shuffleDeck(); }
-      else if(e.key==='1' && document.getElementById('mode').value==='quiz'){ const b=document.querySelectorAll('#mcArea button')[0]; if(b) b.click(); }
-      else if(e.key==='2' && document.getElementById('mode').value==='quiz'){ const b=document.querySelectorAll('#mcArea button')[1]; if(b) b.click(); }
-      else if(e.key==='3' && document.getElementById('mode').value==='quiz'){ const b=document.querySelectorAll('#mcArea button')[2]; if(b) b.click(); }
-      else if(e.key==='4' && document.getElementById('mode').value==='quiz'){ const b=document.querySelectorAll('#mcArea button')[3]; if(b) b.click(); }
-    });
-
-    // Click/Touch to flip (disabled on Quiz front)
-    document.getElementById('card').addEventListener('click', (e)=>{
-      if(document.getElementById('mode').value==='quiz' && showingFront) return;
-      flip();
-    }, { passive:true });
-
-    // Swipe
-    let touchStartX=null, touchStartY=null;
-    document.getElementById('card').addEventListener('touchstart', (e)=>{
-      const t=e.changedTouches[0]; touchStartX=t.clientX; touchStartY=t.clientY;
-    }, {passive:true});
-    document.getElementById('card').addEventListener('touchend', (e)=>{
-      const t=e.changedTouches[0]; if(touchStartX===null) return;
-      const dx=t.clientX - touchStartX; const dy=t.clientY - touchStartY;
-      if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
-        if(dx>0) prev(); else next();
-      } else if(Math.abs(dy)<10 && Math.abs(dx)<10){
-        if(!(document.getElementById('mode').value==='quiz' && showingFront)) flip();
-      }
-      touchStartX=touchStartY=null;
-    }, {passive:true});
-
-    // -------------- URL Hash --------------
-    function setHash(){ location.hash = `#${document.getElementById('mode').value}:${index}`; }
-    function readHash(){
-      const h = location.hash.replace('#','');
-      if(!h) return;
-      const [m, i] = h.split(':');
-      const modeEl = document.getElementById('mode');
-      if(m && [...modeEl.options].some(o=>o.value===m)) modeEl.value = m;
-      const n = Number(i);
-      if(!Number.isNaN(n)) index = Math.max(0, Math.min(deck.length-1, n));
-    }
-
-    // Init
-    function init(){ buildDeck(); readHash(); render(); }
-    init();
-  </script>
+// init
+renderCard();
+</script>
 </body>
 </html>
