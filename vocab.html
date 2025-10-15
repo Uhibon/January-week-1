@@ -33,6 +33,27 @@
       opacity:.25;
     }
 
+    /* Back to Menu button */
+    .back-btn{
+      position:fixed;
+      top:14px; left:14px;
+      z-index:1000;
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.55rem .9rem;
+      border-radius:999px;
+      background:#0b1020;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      box-shadow:0 10px 25px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
+      font-weight:800; font-size:.95rem;
+      text-decoration:none;
+      -webkit-tap-highlight-color: transparent;
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .back-btn:hover{ transform:translateY(-1px); }
+    .back-btn:active{ transform:translateY(0); box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);}
+    .back-btn .arrow{font-weight:900}
+
     header{text-align:center;color:#fff;margin-bottom:20px;}
     header h1{
       font-family:'Cinzel',serif;
@@ -52,23 +73,23 @@
       align-items:center;
       justify-content:center;
     }
-   .card {
-  position: relative;
-  width: 100%; height: 100%;
-  border-radius: var(--radius);
-  transform-style: preserve-3d;
-  transition: transform .7s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 30px 80px rgba(0,0,0,.3);
-  border: 3px solid rgba(255,255,255,.25);
-  background-size: 400% 400%;
-  animation: bgmove 12s linear infinite;
-}
+    .card {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: var(--radius);
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.2,.8,.2,1);
+      box-shadow: 0 30px 80px rgba(0,0,0,.3);
+      border: 3px solid rgba(255,255,255,.25);
+      background-size: 400% 400%;
+      animation: bgmove 12s linear infinite;
+    }
 
-/* smooth diagonal motion */
-@keyframes bgmove {
-  from { background-position: 0 0; }
-  to { background-position: 400% 400%; }
-}
+    /* smooth diagonal motion */
+    @keyframes bgmove {
+      from { background-position: 0 0; }
+      to { background-position: 400% 400%; }
+    }
 
     .card.is-back{transform:rotateY(180deg)}
     .face{
@@ -102,6 +123,7 @@
       font-size:1.1rem;
     }
 
+    /* duplicate keyframes kept as-is per your original */
     @keyframes bgmove{
       0%{background-position:0 0;}
       100%{background-position:300% 300%;}
@@ -109,6 +131,9 @@
   </style>
 </head>
 <body>
+  <!-- Back button -->
+  <a href="#" class="back-btn" id="backMenu"><span class="arrow">❮</span> Back to Menu</a>
+
   <header>
     <h1>The Boo-riculum</h1>
     <h2>January Week 1</h2>
@@ -154,26 +179,33 @@
   const backSub=document.getElementById('backSub');
 
   function show() {
-  const c = CARDS[i];
-  card.style.background = `repeating-linear-gradient(45deg,
-    ${c.stripes[0]} 0%,
-    ${c.stripes[0]} 3%,
-    ${c.stripes[1]} 3%,
-    ${c.stripes[1]} 6%,
-    ${c.stripes[2]} 6%,
-    ${c.stripes[2]} 9%)`;
-  card.style.backgroundSize = '400% 400%';
-  card.style.animation = 'bgmove 12s linear infinite';
-  frontTitle.textContent = c.en;
-  backTitle.textContent = c.jp;
-  backSub.textContent = c.hira;
-  card.classList.toggle('is-back', back);
-}
-
+    const c = CARDS[i];
+    card.style.background = `repeating-linear-gradient(45deg,
+      ${c.stripes[0]} 0%,
+      ${c.stripes[0]} 3%,
+      ${c.stripes[1]} 3%,
+      ${c.stripes[1]} 6%,
+      ${c.stripes[2]} 6%,
+      ${c.stripes[2]} 9%)`;
+    card.style.backgroundSize = '400% 400%';
+    card.style.animation = 'bgmove 12s linear infinite';
+    frontTitle.textContent = c.en;
+    backTitle.textContent = c.jp;
+    backSub.textContent = c.hira;
+    card.classList.toggle('is-back', back);
+  }
 
   document.getElementById('flipBtn').addEventListener('click',()=>{back=!back;show()});
   document.getElementById('nextBtn').addEventListener('click',()=>{i=(i+1)%CARDS.length;back=false;show()});
   document.getElementById('prevBtn').addEventListener('click',()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show()});
+
+  // Back button logic
+  document.getElementById('backMenu').addEventListener('click', (e)=>{
+    e.preventDefault();
+    if (document.referrer) history.back();
+    else window.location.href = 'index.html'; // <- change if your menu lives elsewhere
+  });
+
   show();
   </script>
 </body>
