@@ -8,111 +8,128 @@
   <link rel="icon" type="image/png" href="booha-ghost.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root{
-      --radius:28px;
-      --bg:url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
+    :root {
+      --radius: 28px;
+      --bg: url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{
-      height:100%;
-      font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
-      background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      color:#111;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: system-ui, Segoe UI, Roboto, Inter, sans-serif;
+      background: linear-gradient(160deg, rgba(124,58,237,.1), rgba(34,211,238,.1)), #0f172a;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #111;
     }
-    body::before{
-      content:"";
-      position:fixed;inset:0;z-index:-1;
-      background-image:var(--bg);
-      background-size:cover;
-      background-position:center;
-      opacity:.25;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: var(--bg);
+      background-size: cover;
+      background-position: center;
+      opacity: .25;
     }
-
-    header{text-align:center;color:#fff;margin-bottom:20px;}
-    header h1{
-      font-family:'Cinzel',serif;
-      font-size:clamp(26px,4.5vw,50px);
-      letter-spacing:1px;
-      margin-bottom:10px;
-      font-weight:900;
+    header { text-align: center; color: #fff; margin-bottom: 20px; }
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(26px, 4.5vw, 50px);
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      font-weight: 900;
     }
-    header h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:6px;font-weight:800;}
-    header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
+    header h2 { font-size: clamp(22px, 3.5vw, 36px); margin-bottom: 6px; font-weight: 800; }
+    header h3 { font-size: clamp(18px, 3vw, 30px); font-weight: 600; color: #dbeafe; }
 
-    .card-outer{
-      width:min(92vw,900px);
-      aspect-ratio:3/2;
-      perspective:1500px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    .card-outer {
+      width: min(92vw, 900px);
+      aspect-ratio: 3/2;
+      perspective: 1500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-   .card {
-  position: relative;
-  width: 100%; height: 100%;
-  border-radius: var(--radius);
-  transform-style: preserve-3d;
-  transition: transform .7s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 30px 80px rgba(0,0,0,.3);
-  border: 3px solid rgba(255,255,255,.25);
-  overflow: hidden; /* hide overflow from moving stripes */
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-size: 200% 200%;
-  animation: barberpole 8s linear infinite;
-}
-
-@keyframes barberpole {
-  from { background-position: 0 0; }
-  to { background-position: 200% 200%; }
-}
-
-
-    .card.is-back{transform:rotateY(180deg)}
-    .face{
-      position:absolute;inset:0;border-radius:var(--radius);
-      backface-visibility:hidden;
-      display:flex;align-items:center;justify-content:center;
-      flex-direction:column;text-align:center;
-      padding:1rem;
-      background:rgba(255,255,255,.85);
+    .card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius);
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.2, .8, .2, 1);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .3);
+      border: 3px solid rgba(255,255,255,.25);
+      overflow: hidden; /* so the pseudo-element doesn’t show outside */
     }
-    .face.back{transform:rotateY(180deg)}
-    .term h2{
-      margin:0;
-      font-size:clamp(40px,8vw,90px);
-      font-weight:900;
-      line-height:1.1;
-      color:#111;
-      text-shadow:0 2px 6px rgba(255,255,255,.6);
-    }
-    .term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#333;}
-
-    .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;}
-    button.btn{
-      padding:1rem 1.3rem;
-      border-radius:16px;
-      border:none;
-      background:linear-gradient(180deg,#fff,#e0e0e0);
-      box-shadow:0 10px 25px rgba(0,0,0,.15);
-      font-weight:800;
-      cursor:pointer;
-      font-size:1.1rem;
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      /* gradient pattern will be set dynamically via JS */
+      background-position: 0 0;
+      background-size: 400% 400%;
+      animation: moveStripes 12s linear infinite;
     }
 
-    @keyframes bgmove{
-      0%{background-position:0 0;}
-      100%{background-position:300% 300%;}
+    @keyframes moveStripes {
+      from { background-position: 0 0; }
+      to { background-position: 400% 400%; }
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255,255,255,.85);
+      z-index: 1; /* above the stripes */
+    }
+    .face.back {
+      transform: rotateY(180deg);
+    }
+    .card.is-back {
+      transform: rotateY(180deg);
+    }
+
+    .term h2 {
+      margin: 0;
+      font-size: clamp(40px, 8vw, 90px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #111;
+      text-shadow: 0 2px 6px rgba(255,255,255,.6);
+    }
+    .term p {
+      margin-top: .5rem;
+      font-size: clamp(20px, 3vw, 30px);
+      color: #333;
+    }
+
+    .actions {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    button.btn {
+      padding: 1rem 1.3rem;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(180deg, #fff, #e0e0e0);
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 1.1rem;
     }
   </style>
 </head>
@@ -125,8 +142,18 @@
 
   <div class="card-outer" id="cardOuter">
     <article class="card" id="card">
-      <div class="face front"><div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div></div>
-      <div class="face back"><div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div></div>
+      <div class="face front">
+        <div class="term">
+          <h2 id="frontTitle"></h2>
+          <p id="frontSub"></p>
+        </div>
+      </div>
+      <div class="face back">
+        <div class="term">
+          <h2 id="backTitle"></h2>
+          <p id="backSub"></p>
+        </div>
+      </div>
     </article>
   </div>
 
@@ -137,61 +164,71 @@
   </div>
 
   <script>
-  const CARDS=[
-    {en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff6ec7","#5ee6ff","#ffd166"]},
-    {en:"plan",jp:"計画",hira:"けいかく",stripes:["#5ee6ff","#ffd166","#c77dff"]},
-    {en:"future",jp:"未来",hira:"みらい",stripes:["#ffd166","#8aff80","#5ee6ff"]},
-    {en:"dream",jp:"夢",hira:"ゆめ",stripes:["#8aff80","#ff7eb9","#fff680"]},
-    {en:"challenge",jp:"挑戦",hira:"ちょうせん",stripes:["#ff7eb9","#5ee6ff","#ffd166"]},
-    {en:"try",jp:"挑戦する",hira:"ちょうせん する",stripes:["#ffd166","#8aff80","#c77dff"]},
-    {en:"change",jp:"変える",hira:"かえる",stripes:["#5ee6ff","#ffd166","#ff7eb9"]},
-    {en:"habit",jp:"習慣",hira:"しゅうかん",stripes:["#fff680","#5ee6ff","#8aff80"]},
-    {en:"exercise",jp:"運動",hira:"うんどう",stripes:["#8aff80","#ff7eb9","#ffd166"]},
-    {en:"study",jp:"勉強",hira:"べんきょう",stripes:["#ffd166","#5ee6ff","#c77dff"]},
-    {en:"learn",jp:"学ぶ",hira:"まなぶ",stripes:["#ff7eb9","#8aff80","#fff680"]},
-    {en:"practice",jp:"練習",hira:"れんしゅう",stripes:["#5ee6ff","#ffd166","#ff7eb9"]},
-    {en:"success",jp:"成功",hira:"せいこう",stripes:["#ffd166","#8aff80","#5ee6ff"]},
-    {en:"focus",jp:"集中",hira:"しゅうちゅう",stripes:["#8aff80","#ff7eb9","#ffd166"]},
-    {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
-  ];
+    const CARDS = [
+      { en: "goal", jp: "目標", hira: "もくひょう", stripes: ["#ff6ec7", "#5ee6ff", "#ffd166"] },
+      { en: "plan", jp: "計画", hira: "けいかく", stripes: ["#5ee6ff", "#ffd166", "#c77dff"] },
+      { en: "future", jp: "未来", hira: "みらい", stripes: ["#ffd166", "#8aff80", "#5ee6ff"] },
+      { en: "dream", jp: "夢", hira: "ゆめ", stripes: ["#8aff80", "#ff7eb9", "#fff680"] },
+      { en: "challenge", jp: "挑戦", hira: "ちょうせん", stripes: ["#ff7eb9", "#5ee6ff", "#ffd166"] },
+      { en: "try", jp: "挑戦する", hira: "ちょうせん する", stripes: ["#ffd166", "#8aff80", "#c77dff"] },
+      { en: "change", jp: "変える", hira: "かえる", stripes: ["#5ee6ff", "#ffd166", "#ff7eb9"] },
+      { en: "habit", jp: "習慣", hira: "しゅうかん", stripes: ["#fff680", "#5ee6ff", "#8aff80"] },
+      { en: "exercise", jp: "運動", hira: "うんどう", stripes: ["#8aff80", "#ff7eb9", "#ffd166"] },
+      { en: "study", jp: "勉強", hira: "べんきょう", stripes: ["#ffd166", "#5ee6ff", "#c77dff"] },
+      { en: "learn", jp: "学ぶ", hira: "まなぶ", stripes: ["#ff7eb9", "#8aff80", "#fff680"] },
+      { en: "practice", jp: "練習", hira: "れんしゅう", stripes: ["#5ee6ff", "#ffd166", "#ff7eb9"] },
+      { en: "success", jp: "成功", hira: "せいこう", stripes: ["#ffd166", "#8aff80", "#5ee6ff"] },
+      { en: "focus", jp: "集中", hira: "しゅうちゅう", stripes: ["#8aff80", "#ff7eb9", "#ffd166"] },
+      { en: "motivation", jp: "やる気", hira: "やるき", stripes: ["#5ee6ff", "#fff680", "#ff7eb9"] }
+    ];
 
-  let i=0,back=false;
-  const card=document.getElementById('card');
-  const frontTitle=document.getElementById('frontTitle');
-  const backTitle=document.getElementById('backTitle');
-  const backSub=document.getElementById('backSub');
+    let i = 0, back = false;
+    const card = document.getElementById('card');
+    const frontTitle = document.getElementById('frontTitle');
+    const backTitle = document.getElementById('backTitle');
+    const backSub = document.getElementById('backSub');
 
- function show() {
-  const c = CARDS[i];
-  const stripePattern = `linear-gradient(45deg,
-    ${c.stripes[0]} 0%,
-    ${c.stripes[0]} 4%,
-    ${c.stripes[1]} 4%,
-    ${c.stripes[1]} 8%,
-    ${c.stripes[2]} 8%,
-    ${c.stripes[2]} 12%,
-    ${c.stripes[0]} 12%)`;
-  card.style.setProperty('--stripePattern', stripePattern);
-  card.querySelector('::before');
-  card.style.setProperty('--stripePattern', stripePattern);
-  card.style.setProperty('--stripe1', c.stripes[0]);
-  card.style.setProperty('--stripe2', c.stripes[1]);
-  card.style.setProperty('--stripe3', c.stripes[2]);
-  card.style.setProperty('--stripePattern', stripePattern);
-  document.styleSheets[0].insertRule(`
-    .card::before { background-image: ${stripePattern}; }`, document.styleSheets[0].cssRules.length);
-  frontTitle.textContent = c.en;
-  backTitle.textContent = c.jp;
-  backSub.textContent = c.hira;
-  card.classList.toggle('is-back', back);
-}
+    function show() {
+      const c = CARDS[i];
+      // Create a repeating gradient pattern (thin stripes)
+      const grad = `repeating-linear-gradient(45deg,
+        ${c.stripes[0]} 0%,
+        ${c.stripes[0]} 4%,
+        ${c.stripes[1]} 4%,
+        ${c.stripes[1]} 8%,
+        ${c.stripes[2]} 8%,
+        ${c.stripes[2]} 12%)`;
+      // Apply it to the pseudo-element ::before
+      card.style.setProperty('--stripeGradient', grad);
+      // Now assign it in a way the pseudo-element uses it
+      card.style.setProperty('background-image', grad);
+      // But we need to target the ::before — we do it by injecting a small CSS rule
+      // (or we could assign via a class or CSS variable approach)
+      document.styleSheets[0].insertRule(`
+        .card::before { background-image: ${grad}; }
+      `, document.styleSheets[0].cssRules.length);
 
+      frontTitle.textContent = c.en;
+      backTitle.textContent = c.jp;
+      backSub.textContent = c.hira;
+      card.classList.toggle('is-back', back);
+    }
 
-
-  document.getElementById('flipBtn').addEventListener('click',()=>{back=!back;show()});
-  document.getElementById('nextBtn').addEventListener('click',()=>{i=(i+1)%CARDS.length;back=false;show()});
-  document.getElementById('prevBtn').addEventListener('click',()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show()});
-  show();
+    document.getElementById('flipBtn').addEventListener('click', () => {
+      back = !back;
+      show();
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      i = (i + 1) % CARDS.length;
+      back = false;
+      show();
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      i = (i - 1 + CARDS.length) % CARDS.length;
+      back = false;
+      show();
+    });
+    show();
   </script>
 </body>
 </html>
