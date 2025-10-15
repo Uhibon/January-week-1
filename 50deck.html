@@ -62,7 +62,7 @@ header h2{
   box-shadow:
     0 8px 22px rgba(0,0,0,.35),
     0 0 18px rgba(124,58,237,.25);
-  transition:transform .12s ease, filter .12s ease;
+  transition:transform .12s ease, filter .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
 }
 .modes button::after{
   content:""; position:absolute; inset:-2px;
@@ -70,10 +70,11 @@ header h2{
   box-shadow:0 0 14px rgba(124,58,237,.45), 0 0 22px rgba(94,230,255,.25);
 }
 .modes button:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.modes button.active{
-  background:#38e894; color:#062614; border-color:#38e894;
-  box-shadow:0 8px 28px rgba(56,232,148,.35), 0 0 22px rgba(56,232,148,.55);
-}
+/* Active color by NUMBER (not position) */
+.modes button.active[data-num="1"]{background:var(--pink); color:#3a0630; border-color:var(--pink); box-shadow:0 8px 28px rgba(255,126,185,.35), 0 0 22px rgba(255,126,185,.55)}
+.modes button.active[data-num="2"]{background:var(--green);color:#062614;border-color:var(--green);box-shadow:0 8px 28px rgba(56,232,148,.35), 0 0 22px rgba(56,232,148,.55)}
+.modes button.active[data-num="3"]{background:var(--yellow);color:#3a3206;border-color:var(--yellow);box-shadow:0 8px 28px rgba(255,246,128,.35), 0 0 22px rgba(255,246,128,.55)}
+.modes button.active[data-num="4"]{background:var(--purple);color:#1f0b2c;border-color:var(--purple);box-shadow:0 8px 28px rgba(199,125,255,.35), 0 0 22px rgba(199,125,255,.55)}
 
 /* Stage + Card */
 .stage{display:flex;flex-direction:column;align-items:center;gap:18px;padding:6px 12px;width:100%}
@@ -118,9 +119,7 @@ header h2{
   transition:transform .12s ease, filter .12s ease;
 }
 .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
-.btn.glow{
-  position:relative;
-}
+.btn.glow{position:relative}
 .btn.glow::after{
   content:""; position:absolute; inset:-2px; border-radius:16px; pointer-events:none;
   box-shadow:0 0 14px rgba(124,58,237,.45), 0 0 22px rgba(94,230,255,.25), 0 0 10px rgba(255,246,128,.25);
@@ -158,16 +157,11 @@ header h2{
 <a class="back" href="index.html">⟵ Back to Menu</a>
 <div class="wrapper">
   <header>
-    <h1>The Boo-riculum / ブー・リキュラム</h1>
-    <h2>January Week 1 – New Beginnings & Goals ／ １月第１週：新しい始まりと目標</h2>
+    <h1>January Week 1 – 50 Deck ／ １月第１週：50デック</h1>
+    <h2>New Beginnings & Goals ／ 新しい始まりと目標</h2>
   </header>
 
-  <div class="modes">
-    <button class="tab active" data-mode="vocab">① Vocabulary 語彙 (20)</button>
-    <button class="tab" data-mode="sentences">② Sentences 文 (20)</button>
-    <button class="tab" data-mode="questions">③ Questions 質問 (20)</button>
-    <button class="tab" data-mode="quiz">④ Quiz クイズ (20)</button>
-  </div>
+  <div class="modes" id="modes"></div>
 
   <!-- Cards Stage -->
   <section class="stage" id="cardsStage">
@@ -250,7 +244,6 @@ function burstConfettiFrom(el){
     p.style.opacity='1';
     p.style.transition='transform .6s ease-out, opacity .6s ease-out';
     container.appendChild(p);
-    // animate on next frame
     requestAnimationFrame(()=>{
       p.style.transform=`translate(${dx}px, ${dy}px) rotate(${(Math.random()*360)+180}deg)`;
       p.style.opacity='0';
@@ -354,7 +347,7 @@ const QUIZ = [
 
 // ---------- STATE + EL ----------
 let MODE = "vocab"; // vocab | sentences | questions | quiz
-let idx = 0, flipped = false, score = 0, qIndex = 0, gotIt = false;
+let idx = 0, flipped = false, score = 0, qIndex = 0, firstAttempt = true, gotIt = false;
 const card = document.getElementById('card');
 const frontTitle = document.getElementById('frontTitle');
 const frontSub = document.getElementById('frontSub');
@@ -368,6 +361,41 @@ const scoreEl = document.getElementById('score');
 const qtext = document.getElementById('qtext');
 const opts = document.getElementById('opts');
 const explain = document.getElementById('explain');
+const modesBar = document.getElementById('modes');
+
+// ---------- HELPERS ----------
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// build the modes bar in a RANDOM order each visit
+function buildModes(){
+  const defs = [
+    {num:1, mode:'vocab',     label:'① Vocabulary 語彙 (20)'},
+    {num:2, mode:'sentences', label:'② Sentences 文 (20)'},
+    {num:3, mode:'questions', label:'③ Questions 質問 (20)'},
+    {num:4, mode:'quiz',      label:'④ Quiz クイズ (20)'}
+  ];
+  const order = shuffle(defs); // << random every load
+  modesBar.innerHTML = '';
+  order.forEach((d, k)=>{
+    const b = document.createElement('button');
+    b.className = 'tab';
+    b.dataset.mode = d.mode;
+    b.dataset.num = String(d.num);          // for color mapping
+    b.dataset.ord = String(k+1);            // position (not used for color)
+    b.textContent = d.label;
+    b.addEventListener('click',()=>setMode(d.mode, b));
+    modesBar.appendChild(b);
+  });
+  // default to first in randomized order
+  setMode(order[0].mode, modesBar.firstElementChild);
+}
 
 // ---------- RENDER ----------
 function activeList(){
@@ -379,19 +407,17 @@ function activeList(){
 function renderCard(){
   const list = activeList();
   const item = list[idx];
-  // IMPORTANT: only set backgroundImage so animation props don’t reset
   card.style.backgroundImage = stripes(item.stripes[0], item.stripes[1], item.stripes[2]);
-
   frontTitle.textContent = item.en;
-  frontSub.textContent   = MODE==="vocab" ? "" : "";
+  frontSub.textContent   = "";
   backTitle.textContent  = item.jp;
   backSub.textContent    = `(${item.hira})`;
   card.classList.toggle('is-back', flipped);
 }
-function setMode(m){
-  document.querySelectorAll('.modes button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.mode===m);
-  });
+function setMode(m, btnEl){
+  document.querySelectorAll('.modes button').forEach(b=>b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
   MODE = m; idx = 0; flipped = false;
   if (MODE==="quiz"){
     cardsStage.classList.add('hidden');
@@ -404,16 +430,22 @@ function setMode(m){
   }
 }
 
-// ---------- QUIZ FLOW (multiple guesses, confetti on correct) ----------
+// ---------- QUIZ FLOW (first-try-only scoring + shuffled order) ----------
+let QUIZ_RUN = [];
+
 function startQuiz(){
-  score = 0; qIndex = 0;
+  QUIZ_RUN = shuffle(QUIZ);   // 👈 Shuffle questions each time
+  score = 0;
+  qIndex = 0;
   scoreEl.textContent = `Score: ${score}`;
   showQ();
 }
+
 function showQ(){
+  firstAttempt = true;
   gotIt = false;
-  const item = QUIZ[qIndex];
-  qprog.textContent = `${qIndex+1} / ${QUIZ.length}`;
+  const item = QUIZ_RUN[qIndex];                         // use shuffled list
+  qprog.textContent = `${qIndex+1} / ${QUIZ_RUN.length}`; // update counter
   qtext.textContent = item.q;
   opts.innerHTML = "";
   explain.textContent = "";
@@ -423,36 +455,41 @@ function showQ(){
     b.className = 'opt';
     b.textContent = t;
     b.addEventListener('click', ()=>{
-      if (gotIt) return; // already solved, ignore further clicks
+      if (gotIt) return;
       const correct = i===item.a;
       if (correct){
         b.classList.add('correct');
         burstConfettiFrom(b);
         gotIt = true;
-        score++; scoreEl.textContent = `Score: ${score}`;
-        // lock others once correct
+        // ✅ Only give point if it was correct on the first try
+        if (firstAttempt){ 
+          score++; 
+          scoreEl.textContent = `Score: ${score}`; 
+        }
+        // Lock other buttons
         [...opts.children].forEach(btn=>btn.disabled=true);
         explain.textContent = item.ex;
       } else {
-        b.classList.add('wrong'); // keep guessing allowed
+        b.classList.add('wrong');
+        firstAttempt = false; // ❌ future correct answers = 0 points
       }
     });
     opts.appendChild(b);
   });
 }
+
 document.getElementById('nextQ').addEventListener('click', ()=>{
-  if (qIndex < QUIZ.length-1){ qIndex++; showQ(); }
-  else{
+  if (qIndex < QUIZ_RUN.length-1){ 
+    qIndex++; 
+    showQ(); 
+  } else {
     qtext.textContent = "Finished! Great job.";
     opts.innerHTML = "";
-    explain.innerHTML = `Your final score is <b>${score}</b> / ${QUIZ.length}.`;
+    explain.innerHTML = `Your final score is <b>${score}</b> / ${QUIZ_RUN.length}.`;
   }
 });
 
 // ---------- UI EVENTS ----------
-document.querySelectorAll('.tab').forEach(b=>{
-  b.addEventListener('click',()=>setMode(b.dataset.mode));
-});
 document.getElementById('flipBtn').addEventListener('click', ()=>{flipped=!flipped;renderCard()});
 document.getElementById('nextBtn').addEventListener('click', ()=>{
   const list = activeList(); idx = (idx+1) % list.length; flipped=false; renderCard();
@@ -461,8 +498,9 @@ document.getElementById('prevBtn').addEventListener('click', ()=>{
   const list = activeList(); idx = (idx-1+list.length) % list.length; flipped=false; renderCard();
 });
 
-// init
-renderCard();
+// init: build randomized modes and start
+buildModes();
+
 </script>
 </body>
 </html>
