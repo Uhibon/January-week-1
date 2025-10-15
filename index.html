@@ -52,7 +52,7 @@
       align-items:center;
       justify-content:center;
     }
-    .card {
+   .card {
   position: relative;
   width: 100%; height: 100%;
   border-radius: var(--radius);
@@ -60,15 +60,23 @@
   transition: transform .7s cubic-bezier(.2,.8,.2,1);
   box-shadow: 0 30px 80px rgba(0,0,0,.3);
   border: 3px solid rgba(255,255,255,.25);
-  background-size: 400% 400%;
-  animation: bgmove 12s linear infinite;
+  overflow: hidden; /* hide overflow from moving stripes */
 }
 
-/* smooth diagonal motion */
-@keyframes bgmove {
-  from { background-position: 0 0; }
-  to { background-position: 400% 400%; }
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: 200% 200%;
+  animation: barberpole 8s linear infinite;
 }
+
+@keyframes barberpole {
+  from { background-position: 0 0; }
+  to { background-position: 200% 200%; }
+}
+
 
     .card.is-back{transform:rotateY(180deg)}
     .face{
@@ -153,22 +161,31 @@
   const backTitle=document.getElementById('backTitle');
   const backSub=document.getElementById('backSub');
 
-  function show() {
+ function show() {
   const c = CARDS[i];
-  card.style.background = `repeating-linear-gradient(45deg,
+  const stripePattern = `linear-gradient(45deg,
     ${c.stripes[0]} 0%,
-    ${c.stripes[0]} 3%,
-    ${c.stripes[1]} 3%,
-    ${c.stripes[1]} 6%,
-    ${c.stripes[2]} 6%,
-    ${c.stripes[2]} 9%)`;
-  card.style.backgroundSize = '400% 400%';
-  card.style.animation = 'bgmove 12s linear infinite';
+    ${c.stripes[0]} 4%,
+    ${c.stripes[1]} 4%,
+    ${c.stripes[1]} 8%,
+    ${c.stripes[2]} 8%,
+    ${c.stripes[2]} 12%,
+    ${c.stripes[0]} 12%)`;
+  card.style.setProperty('--stripePattern', stripePattern);
+  card.querySelector('::before');
+  card.style.setProperty('--stripePattern', stripePattern);
+  card.style.setProperty('--stripe1', c.stripes[0]);
+  card.style.setProperty('--stripe2', c.stripes[1]);
+  card.style.setProperty('--stripe3', c.stripes[2]);
+  card.style.setProperty('--stripePattern', stripePattern);
+  document.styleSheets[0].insertRule(`
+    .card::before { background-image: ${stripePattern}; }`, document.styleSheets[0].cssRules.length);
   frontTitle.textContent = c.en;
   backTitle.textContent = c.jp;
   backSub.textContent = c.hira;
   card.classList.toggle('is-back', back);
 }
+
 
 
   document.getElementById('flipBtn').addEventListener('click',()=>{back=!back;show()});
