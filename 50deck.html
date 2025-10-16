@@ -106,6 +106,7 @@ footer{
   font-family:'Cinzel',serif;font-size:clamp(14px,2vw,18px);
   margin-top:28px;opacity:0.9;
 }
+.hidden{display:none}
 </style>
 </head>
 <body>
@@ -149,7 +150,6 @@ footer{
         <h3 id="qtext"></h3>
         <div class="opts" id="opts"></div>
         <div class="explain" id="explain"></div>
-        <div class="qnav"><button class="btn" id="nextQ">Next ❯</button></div>
       </div>
     </div>
   </section>
@@ -169,19 +169,96 @@ function speak(text){
   u.lang="en-US";u.rate=0.9;synth.speak(u);
 }
 
-/* simplified from your version: only main logic differences */
-const QUIZ=[
-  {q:"He is ____ to join the basketball club.",opts:["will","is going","is going to","going to"],a:3,ex:"'is going to' = planned future."},
-  /* ... other quiz items unchanged ... */
+const VOCAB=[
+  {en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
+  {en:"plan",jp:"計画",hira:"けいかく",stripes:["#5ee6ff","#fff680","#c77dff"]},
+  {en:"habit",jp:"習慣",hira:"しゅうかん",stripes:["#8aff80","#ff7eb9","#c77dff"]},
+  {en:"routine",jp:"日課",hira:"にっか",stripes:["#5ee6ff","#ff7eb9","#fff680"]},
+  {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#8aff80","#5ee6ff","#ff7eb9"]}
 ];
-/* other JS identical to your working deck:
-   - shuffle
-   - card switching
-   - quiz logic
-   - confetti (if desired)
-   - mode switching
-   - call speak() when Play pressed
-*/
+const SENTENCES=[
+  {en:"I will study every day.",jp:"毎日勉強します。",hira:"まいにち べんきょう します",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
+  {en:"I’m going to try something new.",jp:"新しいことに挑戦します。",hira:"あたらしい こと に ちょうせん します",stripes:["#5ee6ff","#fff680","#c77dff"]},
+  {en:"I will do my best this year.",jp:"今年は全力を尽くします。",hira:"ことし は ぜんりょく を つくし ます",stripes:["#fff680","#8aff80","#5ee6ff"]},
+  {en:"I will make a new friend.",jp:"新しい友だちを作ります。",hira:"あたらしい ともだち を つくり ます",stripes:["#8aff80","#ff7eb9","#fff680"]},
+  {en:"I will speak more English.",jp:"もっと英語を話します。",hira:"もっと えいご を はなし ます",stripes:["#fff680","#5ee6ff","#c77dff"]}
+];
+const QUESTIONS=[
+  {en:"What goal will you set this month?",jp:"今月はどんな目標を立てますか。",hira:"こんげつ は どんな もくひょう を たて ます か",stripes:["#5ee6ff","#ff7eb9","#fff680"]},
+  {en:"Are you going to try something new this week?",jp:"今週、新しいことに挑戦しますか。",hira:"こんしゅう あたらしい こと に ちょうせん します か",stripes:["#8aff80","#5ee6ff","#c77dff"]},
+  {en:"Who will help you reach your goal?",jp:"目標を達成するのを誰が手伝いますか。",hira:"もくひょう を たっせい する の を だれ が てつだい ます か",stripes:["#5ee6ff","#fff680","#c77dff"]},
+  {en:"Where will you study after school today?",jp:"今日放課後はどこで勉強しますか。",hira:"きょう ほうかご は どこ で べんきょう します か",stripes:["#fff680","#8aff80","#5ee6ff"]},
+  {en:"How will you reward yourself?",jp:"どうやって自分にごほうびをあげますか。",hira:"どうやって じぶん に ごほうび を あげ ます か",stripes:["#c77dff","#5ee6ff","#fff680"]}
+];
+const QUIZ=[
+  {q:"I ___ write my goals tonight.",opts:["am going","am going to","will","going to"],a:2,ex:"Decision at the moment → will."},
+  {q:"She is ___ start a diary next week.",opts:["going to","will to","go to","going"],a:0,ex:"Planned intention → going to + base."},
+  {q:"He is ____ to join the basketball club.",opts:["will","is going","is going to","going to"],a:3,ex:"He is going to join → 'going to' is correct."}
+];
+
+let MODE="vocab",idx=0,flipped=false;
+const card=document.getElementById('card');
+const frontTitle=document.getElementById('frontTitle');
+const backTitle=document.getElementById('backTitle');
+const backSub=document.getElementById('backSub');
+const cardsStage=document.getElementById('cardsStage');
+const quizStage=document.getElementById('quizStage');
+const qprog=document.getElementById('qprog');
+const scoreEl=document.getElementById('score');
+const qtext=document.getElementById('qtext');
+const opts=document.getElementById('opts');
+const explain=document.getElementById('explain');
+
+function shuffle(arr){return arr.sort(()=>Math.random()-0.5);}
+function activeList(){return MODE==="vocab"?VOCAB:MODE==="sentences"?SENTENCES:QUESTIONS;}
+function renderCard(){
+  const c=activeList()[idx];
+  card.style.backgroundImage=stripes(...c.stripes);
+  frontTitle.textContent=c.en;
+  backTitle.textContent=c.jp;
+  backSub.textContent=c.hira;
+  card.classList.toggle('is-back',flipped);
+}
+document.getElementById('flipBtn').onclick=()=>{flipped=!flipped;renderCard()};
+document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%activeList().length;flipped=false;renderCard()};
+document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+activeList().length)%activeList().length;flipped=false;renderCard()};
+document.getElementById('speakBtn').onclick=()=>{if(!flipped)speak(activeList()[idx].en);};
+
+document.querySelectorAll('.tab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');MODE=b.dataset.mode;idx=0;flipped=false;
+    if(MODE==="quiz"){cardsStage.classList.add('hidden');quizStage.classList.remove('hidden');startQuiz();}
+    else{quizStage.classList.add('hidden');cardsStage.classList.remove('hidden');renderCard();}
+  }
+});
+
+let score=0,qIndex=0;
+function startQuiz(){score=0;qIndex=0;scoreEl.textContent=`Score: ${score}`;showQ();}
+function showQ(){
+  const item=QUIZ[qIndex];
+  qprog.textContent=`${qIndex+1} / ${QUIZ.length}`;
+  qtext.textContent=item.q;opts.innerHTML="";explain.textContent="";
+  item.opts.forEach((t,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';b.textContent=t;
+    b.onclick=()=>{
+      if(i===item.a){
+        b.classList.add('correct');
+        explain.textContent=item.ex;
+        score++;scoreEl.textContent=`Score: ${score}`;
+        setTimeout(()=>{qIndex++;if(qIndex<QUIZ.length)showQ();else endQuiz();},1200);
+      }else{b.classList.add('wrong');}
+    };
+    opts.appendChild(b);
+  });
+}
+function endQuiz(){
+  qtext.textContent="Finished! Great job.";
+  opts.innerHTML="";
+  explain.innerHTML=`Your final score is <b>${score}</b> / ${QUIZ.length}.`;
+}
+renderCard();
 </script>
 </body>
 </html>
