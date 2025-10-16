@@ -29,8 +29,10 @@ html,body{height:100%;font-family:'Cinzel',serif;background:#000;color:#fff;over
   height:100%;
   text-align:center;
   animation: fadeIn 1.2s ease-in;
+  position:relative;
 }
 
+/* Headings */
 h1 {
   font-size:clamp(32px,5vw,60px);
   letter-spacing:1px;
@@ -106,6 +108,18 @@ a.deck:nth-child(3):hover{
   from{opacity:0;}
   to{opacity:1;}
 }
+
+/* Footer */
+footer {
+  position:absolute;
+  bottom:20px;
+  width:100%;
+  text-align:center;
+  font-size:clamp(14px,2vw,18px);
+  color:#888;
+  letter-spacing:1px;
+  opacity:0.9;
+}
 </style>
 </head>
 <body>
@@ -120,6 +134,10 @@ a.deck:nth-child(3):hover{
     <a class="deck" href="sentences.html">Sentences<br><span style="font-size:0.8em;">文</span></a>
     <a class="deck" href="50deck.html">50-Minute<br><span style="font-size:0.8em;">５０分</span></a>
   </div>
+
+  <footer>
+    Bryan's English School
+  </footer>
 </section>
 
 </body>
