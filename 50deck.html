@@ -12,6 +12,8 @@
   --radius:28px;
   --ink:#111; --paper:#ffffffee;
   --pink:#ff7eb9; --blue:#5ee6ff; --yellow:#fff680; --green:#8aff80; --purple:#c77dff;
+  --deep:#0b1530; --deep2:#0f172a;
+  --glow:#7c3aed;
 }
 
 /* Base */
@@ -27,86 +29,152 @@ html,body{
   display:flex;flex-direction:column;
   align-items:center;justify-content:flex-start;
   gap:12px;
-  padding:56px 10px 70px;
+  padding:56px 10px 84px; /* space for footer */
+  position:relative;
 }
 
 /* Header */
 header{text-align:center; line-height:1.15}
-header .line1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(30px,5.2vw,62px)}
-header .line2{margin-top:6px;font-weight:900;font-size:clamp(18px,3.6vw,30px)}
-header .line3{margin-top:2px;opacity:.95;font-weight:800;font-size:clamp(18px,3.6vw,28px)}
-.back{position:fixed;left:10px;top:10px;color:#fff;text-decoration:none;font-weight:800;
-  padding:10px 14px;border-radius:999px;border:1px solid #2f3b7a;background:#0c1440;
-  box-shadow:0 0 18px rgba(124,58,237,.15), inset 0 0 8px rgba(255,255,255,.05);
-  transition:transform .15s ease;}
+header .line1{
+  font-family:'Cinzel',serif;font-weight:900;
+  font-size:clamp(30px,5.2vw,62px);letter-spacing:.5px
+}
+header .line2{
+  margin-top:6px; font-weight:900;
+  font-size:clamp(18px,3.6vw,30px)
+}
+header .line3{
+  margin-top:2px; opacity:.95; font-weight:800;
+  font-size:clamp(18px,3.6vw,28px)
+}
+.back{
+  position:fixed;left:10px;top:10px;
+  color:#fff;text-decoration:none;font-weight:800;
+  padding:10px 14px;border-radius:999px;border:1px solid #2f3b7a;
+  background:#0c1440;box-shadow:0 0 18px rgba(124,58,237,.15), inset 0 0 8px rgba(255,255,255,.05);
+  transition:transform .15s ease;
+}
 .back:hover{transform:translateY(-1px)}
 
-/* Mode buttons */
-.modes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0 8px}
+/* Tabs (①–④, fixed order) */
+.modes{
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0 8px
+}
 .modes button{
+  position:relative;
   background:#0d1b4a;border:1px solid #2b3f8a;color:#e6e9ff;
-  border-radius:14px;padding:14px 20px;font-weight:900;cursor:pointer;
-  box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 18px rgba(124,58,237,.25);
+  border-radius:14px;padding:12px 16px;font-weight:900;cursor:pointer;
+  text-shadow:0 1px 0 rgba(0,0,0,.3);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.35),
+    0 0 18px rgba(124,58,237,.25);
+  transition:transform .12s ease, filter .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
   font-size:clamp(14px,2.6vw,18px);
 }
-.modes button.active[data-num="1"]{background:var(--pink);color:#3a0630;}
-.modes button.active[data-num="2"]{background:var(--green);color:#062614;}
-.modes button.active[data-num="3"]{background:var(--yellow);color:#3a3206;}
-.modes button.active[data-num="4"]{background:var(--purple);color:#1f0b2c;}
+.modes button::after{
+  content:""; position:absolute; inset:-2px;
+  border-radius:16px; pointer-events:none;
+  box-shadow:0 0 14px rgba(124,58,237,.45), 0 0 22px rgba(94,230,255,.25);
+}
+.modes button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.modes button.active[data-num="1"]{background:var(--pink); color:#3a0630; border-color:var(--pink); box-shadow:0 8px 28px rgba(255,126,185,.35), 0 0 22px rgba(255,126,185,.55)}
+.modes button.active[data-num="2"]{background:var(--green);color:#062614;border-color:var(--green);box-shadow:0 8px 28px rgba(56,232,148,.35), 0 0 22px rgba(56,232,148,.55)}
+.modes button.active[data-num="3"]{background:var(--yellow);color:#3a3206;border-color:var(--yellow);box-shadow:0 8px 28px rgba(255,246,128,.35), 0 0 22px rgba(255,246,128,.55)}
+.modes button.active[data-num="4"]{background:var(--purple);color:#1f0b2c;border-color:var(--purple);box-shadow:0 8px 28px rgba(199,125,255,.35), 0 0 22px rgba(199,125,255,.55)}
 
-/* Card + animation */
+/* Stage + Card */
+.stage{display:flex;flex-direction:column;align-items:center;gap:18px;padding:6px 12px;width:100%}
 .card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center}
 .card{
-  position:relative;width:100%;height:100%;
-  border-radius:var(--radius);transform-style:preserve-3d;
-  transition:transform .7s cubic-bezier(.2,.8,.2,1);
+  position:relative;width:100%;height:100%;border-radius:var(--radius);
+  transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 35px 90px rgba(0,0,0,.55);
   border:3px solid rgba(255,255,255,.18);
+
+  background-repeat:repeat;
   background-size:400% 400%;
   animation:stripeMove 10s linear infinite;
+  will-change:background-position;
 }
 @keyframes stripeMove{from{background-position:0 0}to{background-position:400% 400%}}
-.card.is-back{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;
-  background:var(--paper);color:var(--ink);}
-.face.back{transform:rotateY(180deg)}
-.term h2{font-size:clamp(36px,6vw,68px);font-weight:900;}
-.term p{margin-top:.7rem;font-size:clamp(20px,3.2vw,34px);opacity:.95}
 
-/* Buttons */
-.controls{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:20px}
-.btn{
-  padding:16px 20px;border-radius:16px;border:none;
-  background:linear-gradient(180deg,#fff,#e0e0e0);
-  font-weight:900;font-size:1.2rem;cursor:pointer;
-  box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 14px rgba(124,58,237,.25);
+.card.is-back{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;
+  padding:1.2rem;background:var(--paper);color:var(--ink)
 }
-.btn:hover{transform:translateY(-1px)}
+.face.back{transform:rotateY(180deg)}
+/* Card fonts */
+.term h2{
+  font-size:clamp(36px,6vw,68px);
+  font-weight:900;line-height:1.18;letter-spacing:.2px;
+}
+.term p{
+  margin-top:.7rem;font-size:clamp(20px,3.2vw,34px);opacity:.95
+}
+
+/* Controls row */
+.controls{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{
+  padding:14px 18px;border-radius:16px;border:1px solid #e5e7eb;background:linear-gradient(180deg,#fff,#eaeaea);
+  font-weight:900;cursor:pointer;color:#111;
+  font-size:clamp(16px,3.2vw,20px);
+  box-shadow:0 12px 28px rgba(0,0,0,.28), 0 0 14px rgba(124,58,237,.25);
+  transition:transform .12s ease, filter .12s ease;
+  min-width:110px;
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+.btn.glow{position:relative}
+.btn.glow::after{
+  content:""; position:absolute; inset:-2px; border-radius:18px; pointer-events:none;
+  box-shadow:0 0 14px rgba(124,58,237,.45), 0 0 22px rgba(94,230,255,.25), 0 0 10px rgba(255,246,128,.25);
+}
+
+/* Red Play triangle button */
 #speakBtn{
   background:linear-gradient(180deg,#ff4444,#cc0000);
-  color:#fff;font-size:1.4rem;padding:16px 24px;
-  border:none;border-radius:16px;
-  box-shadow:0 0 20px rgba(255,0,0,.4);
+  color:#fff;border:none;min-width:76px;
+  font-size:clamp(20px,4vw,24px);
+  box-shadow:0 0 22px rgba(255,0,0,.35);
 }
-#speakBtn:hover{transform:scale(1.08)}
 
 /* Quiz */
 .quiz-wrap{width:min(94vw,900px);background:#0b1030;border:1px solid #2a3575;border-radius:18px;padding:20px;
-  box-shadow:0 24px 70px rgba(0,0,0,.45);}
-.qtop{display:flex;justify-content:space-between;margin-bottom:14px}
-.q h3{font-size:clamp(24px,4vw,36px);}
-.opt{background:#0d133a;border:2px solid #2a3575;border-radius:14px;
+  box-shadow:0 24px 70px rgba(0,0,0,.45), 0 0 24px rgba(124,58,237,.15)}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.qprog,.score{font-weight:900;font-size:clamp(16px,2.8vw,20px)}
+.q{background:#0f1544;border:1px solid #2a3575;border-radius:14px;padding:18px}
+.q h3{font-size:clamp(24px,4vw,36px);margin-bottom:12px;line-height:1.25}
+.opts{display:grid;grid-template-columns:1fr;gap:14px;margin:14px 0}
+.opt{
+  background:#0d133a;border:2px solid #2a3575;border-radius:14px;
   padding:18px;cursor:pointer;font-weight:900;color:#e9ecff;
-  font-size:clamp(18px,3.2vw,26px);}
-.opt.correct{border-color:#22c55e;background:#0f2a1a;}
-.opt.wrong{border-color:#ef4444;background:#2a1111;}
-footer{
-  text-align:center;color:#d1d5db;
-  font-family:'Cinzel',serif;font-size:clamp(14px,2vw,18px);
-  margin-top:28px;opacity:0.9;
+  font-size:clamp(18px,3.2vw,26px); line-height:1.2;
+  box-shadow:0 8px 22px rgba(0,0,0,.35), 0 0 14px rgba(124,58,237,.25);
+  transition:transform .08s ease, filter .08s ease, background .1s, border-color .1s;
+  text-align:left;
 }
+.opt:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.opt.correct{border-color:#22c55e;background:#0f2a1a;box-shadow:0 0 18px rgba(34,197,94,.45)}
+.opt.wrong{border-color:#ef4444;background:#2a1111;box-shadow:0 0 18px rgba(239,68,68,.35)}
+.explain{margin-top:12px;color:#d7ddff;font-size:clamp(14px,2.4vw,18px)}
+.qnav{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 .hidden{display:none}
+
+/* Footer */
+footer{
+  position:fixed; left:0; right:0; bottom:14px;
+  text-align:center; color:#d1d5db;
+  font-family:'Cinzel',serif; letter-spacing:.5px;
+  font-size:clamp(14px,2.4vw,18px); opacity:.92;
+}
+
+/* Small */
+@media (max-width:520px){
+  .term h2{font-size:clamp(32px,8vw,48px)}
+  .term p{font-size:clamp(18px,5vw,24px)}
+}
 </style>
 </head>
 <body>
@@ -114,32 +182,45 @@ footer{
 <div class="wrapper">
   <header>
     <div class="line1">The Boo-riculum</div>
-    <div class="line2">January Week 1 : 50 Deck</div>
+    <div class="line2">January Week 1 : 50 deck</div>
     <div class="line3">１月第１週 : 50デック</div>
   </header>
 
+  <!-- Fixed order 1→4 -->
   <div class="modes" id="modes">
-    <button class="tab active" data-num="1" data-mode="vocab">① Vocabulary 語彙</button>
-    <button class="tab" data-num="2" data-mode="sentences">② Sentences 文</button>
-    <button class="tab" data-num="3" data-mode="questions">③ Questions 質問</button>
-    <button class="tab" data-num="4" data-mode="quiz">④ Quiz クイズ</button>
+    <button class="tab active" data-num="1" data-mode="vocab">① Vocabulary 語彙 (20)</button>
+    <button class="tab" data-num="2" data-mode="sentences">② Sentences 文 (20)</button>
+    <button class="tab" data-num="3" data-mode="questions">③ Questions 質問 (20)</button>
+    <button class="tab" data-num="4" data-mode="quiz">④ Quiz クイズ (20)</button>
   </div>
 
+  <!-- Cards Stage -->
   <section class="stage" id="cardsStage">
     <div class="card-outer">
       <article class="card" id="card">
-        <div class="face front"><div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div></div>
-        <div class="face back"><div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div></div>
+        <div class="face front">
+          <div class="term">
+            <h2 id="frontTitle"></h2>
+            <p id="frontSub"></p>
+          </div>
+        </div>
+        <div class="face back">
+          <div class="term">
+            <h2 id="backTitle"></h2>
+            <p id="backSub"></p>
+          </div>
+        </div>
       </article>
     </div>
     <div class="controls">
-      <button class="btn" id="prevBtn">❮ Prev</button>
-      <button class="btn" id="flipBtn">Flip ⤾</button>
-      <button class="btn" id="nextBtn">Next ❯</button>
-      <button id="speakBtn">▶</button>
+      <button class="btn glow" id="prevBtn">❮ Prev</button>
+      <button class="btn glow" id="flipBtn">Flip ⤾</button>
+      <button class="btn glow" id="nextBtn">Next ❯</button>
+      <button class="btn" id="speakBtn">▶</button>
     </div>
   </section>
 
+  <!-- Quiz Stage -->
   <section class="stage hidden" id="quizStage">
     <div class="quiz-wrap">
       <div class="qtop">
@@ -150,114 +231,300 @@ footer{
         <h3 id="qtext"></h3>
         <div class="opts" id="opts"></div>
         <div class="explain" id="explain"></div>
+        <div class="qnav">
+          <button class="btn glow" id="nextQ">Next ❯</button>
+        </div>
       </div>
     </div>
   </section>
-
-  <footer>Bryan’s English School</footer>
 </div>
 
+<footer>Bryan's English School</footer>
+
 <script>
+// ---------- UTIL: Barber stripes + Confetti ----------
 function stripes(a,b,c){
   return `repeating-linear-gradient(45deg,
-    ${a} 0%,${a} 3%,${b} 3%,${b} 6%,${c} 6%,${c} 9%)`;
+    ${a} 0%, ${a} 3%,
+    ${b} 3%, ${b} 6%,
+    ${c} 6%, ${c} 9%)`;
 }
-const synth = window.speechSynthesis;
-function speak(text){
-  if(synth.speaking) synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="en-US";u.rate=0.9;synth.speak(u);
-}
-
-const VOCAB=[
-  {en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
-  {en:"plan",jp:"計画",hira:"けいかく",stripes:["#5ee6ff","#fff680","#c77dff"]},
-  {en:"habit",jp:"習慣",hira:"しゅうかん",stripes:["#8aff80","#ff7eb9","#c77dff"]},
-  {en:"routine",jp:"日課",hira:"にっか",stripes:["#5ee6ff","#ff7eb9","#fff680"]},
-  {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#8aff80","#5ee6ff","#ff7eb9"]}
-];
-const SENTENCES=[
-  {en:"I will study every day.",jp:"毎日勉強します。",hira:"まいにち べんきょう します",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
-  {en:"I’m going to try something new.",jp:"新しいことに挑戦します。",hira:"あたらしい こと に ちょうせん します",stripes:["#5ee6ff","#fff680","#c77dff"]},
-  {en:"I will do my best this year.",jp:"今年は全力を尽くします。",hira:"ことし は ぜんりょく を つくし ます",stripes:["#fff680","#8aff80","#5ee6ff"]},
-  {en:"I will make a new friend.",jp:"新しい友だちを作ります。",hira:"あたらしい ともだち を つくり ます",stripes:["#8aff80","#ff7eb9","#fff680"]},
-  {en:"I will speak more English.",jp:"もっと英語を話します。",hira:"もっと えいご を はなし ます",stripes:["#fff680","#5ee6ff","#c77dff"]}
-];
-const QUESTIONS=[
-  {en:"What goal will you set this month?",jp:"今月はどんな目標を立てますか。",hira:"こんげつ は どんな もくひょう を たて ます か",stripes:["#5ee6ff","#ff7eb9","#fff680"]},
-  {en:"Are you going to try something new this week?",jp:"今週、新しいことに挑戦しますか。",hira:"こんしゅう あたらしい こと に ちょうせん します か",stripes:["#8aff80","#5ee6ff","#c77dff"]},
-  {en:"Who will help you reach your goal?",jp:"目標を達成するのを誰が手伝いますか。",hira:"もくひょう を たっせい する の を だれ が てつだい ます か",stripes:["#5ee6ff","#fff680","#c77dff"]},
-  {en:"Where will you study after school today?",jp:"今日放課後はどこで勉強しますか。",hira:"きょう ほうかご は どこ で べんきょう します か",stripes:["#fff680","#8aff80","#5ee6ff"]},
-  {en:"How will you reward yourself?",jp:"どうやって自分にごほうびをあげますか。",hira:"どうやって じぶん に ごほうび を あげ ます か",stripes:["#c77dff","#5ee6ff","#fff680"]}
-];
-const QUIZ=[
-  {q:"I ___ write my goals tonight.",opts:["am going","am going to","will","going to"],a:2,ex:"Decision at the moment → will."},
-  {q:"She is ___ start a diary next week.",opts:["going to","will to","go to","going"],a:0,ex:"Planned intention → going to + base."},
-  {q:"He is ____ to join the basketball club.",opts:["will","is going","is going to","going to"],a:3,ex:"He is going to join → 'going to' is correct."}
-];
-
-let MODE="vocab",idx=0,flipped=false;
-const card=document.getElementById('card');
-const frontTitle=document.getElementById('frontTitle');
-const backTitle=document.getElementById('backTitle');
-const backSub=document.getElementById('backSub');
-const cardsStage=document.getElementById('cardsStage');
-const quizStage=document.getElementById('quizStage');
-const qprog=document.getElementById('qprog');
-const scoreEl=document.getElementById('score');
-const qtext=document.getElementById('qtext');
-const opts=document.getElementById('opts');
-const explain=document.getElementById('explain');
-
-function shuffle(arr){return arr.sort(()=>Math.random()-0.5);}
-function activeList(){return MODE==="vocab"?VOCAB:MODE==="sentences"?SENTENCES:QUESTIONS;}
-function renderCard(){
-  const c=activeList()[idx];
-  card.style.backgroundImage=stripes(...c.stripes);
-  frontTitle.textContent=c.en;
-  backTitle.textContent=c.jp;
-  backSub.textContent=c.hira;
-  card.classList.toggle('is-back',flipped);
-}
-document.getElementById('flipBtn').onclick=()=>{flipped=!flipped;renderCard()};
-document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%activeList().length;flipped=false;renderCard()};
-document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+activeList().length)%activeList().length;flipped=false;renderCard()};
-document.getElementById('speakBtn').onclick=()=>{if(!flipped)speak(activeList()[idx].en);};
-
-document.querySelectorAll('.tab').forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');MODE=b.dataset.mode;idx=0;flipped=false;
-    if(MODE==="quiz"){cardsStage.classList.add('hidden');quizStage.classList.remove('hidden');startQuiz();}
-    else{quizStage.classList.add('hidden');cardsStage.classList.remove('hidden');renderCard();}
+function burstConfettiFrom(el){
+  const colors = ['#5ee6ff','#ff7eb9','#8aff80','#fff680','#c77dff'];
+  const rect = el.getBoundingClientRect();
+  const container = document.createElement('div');
+  container.style.position='fixed';
+  container.style.left = (rect.left + rect.width/2) + 'px';
+  container.style.top  = (rect.top + rect.height/2) + 'px';
+  container.style.pointerEvents='none';
+  container.style.width='0'; container.style.height='0';
+  document.body.appendChild(container);
+  const pieces = 26;
+  for(let i=0;i<pieces;i++){
+    const p = document.createElement('div');
+    const size = 6 + Math.random()*8;
+    const ang = Math.random()*2*Math.PI;
+    const dist = 40 + Math.random()*70;
+    const dx = Math.cos(ang)*dist;
+    const dy = Math.sin(ang)*dist - (20+Math.random()*30);
+    p.style.position='absolute';
+    p.style.width=size+'px'; p.style.height=size+'px';
+    p.style.background=colors[i%colors.length];
+    p.style.borderRadius='2px';
+    p.style.transform=`translate(0,0) rotate(${Math.random()*360}deg)`;
+    p.style.opacity='1';
+    p.style.transition='transform .6s ease-out, opacity .6s ease-out';
+    container.appendChild(p);
+    requestAnimationFrame(()=>{
+      p.style.transform=`translate(${dx}px, ${dy}px) rotate(${(Math.random()*360)+180}deg)`;
+      p.style.opacity='0';
+    });
   }
+  setTimeout(()=>container.remove(), 700);
+}
+
+// ---------- CONTENT (20 / 20 / 20 / 20) ----------
+const VOCAB = [
+  {en:"goal", jp:"目標", hira:"もくひょう", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"plan", jp:"計画", hira:"けいかく", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"resolution", jp:"決意", hira:"けつい", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"habit", jp:"習慣", hira:"しゅうかん", stripes:[ "#8aff80","#ff7eb9","#c77dff" ]},
+  {en:"routine", jp:"日課", hira:"にっか", stripes:[ "#5ee6ff","#ff7eb9","#fff680" ]},
+  {en:"schedule", jp:"予定", hira:"よてい", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"deadline", jp:"締め切り", hira:"しめきり", stripes:[ "#fff680","#c77dff","#5ee6ff" ]},
+  {en:"progress", jp:"進歩", hira:"しんぽ", stripes:[ "#8aff80","#fff680","#5ee6ff" ]},
+  {en:"effort", jp:"努力", hira:"どりょく", stripes:[ "#ff7eb9","#8aff80","#fff680" ]},
+  {en:"focus", jp:"集中", hira:"しゅうちゅう", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"motivation", jp:"やる気", hira:"やるき", stripes:[ "#8aff80","#5ee6ff","#ff7eb9" ]},
+  {en:"challenge", jp:"挑戦", hira:"ちょうせん", stripes:[ "#c77dff","#fff680","#5ee6ff" ]},
+  {en:"success", jp:"成功", hira:"せいこう", stripes:[ "#5ee6ff","#8aff80","#ff7eb9" ]},
+  {en:"mistake", jp:"間違い", hira:"まちがい", stripes:[ "#fff680","#ff7eb9","#8aff80" ]},
+  {en:"improve", jp:"上達する", hira:"じょうたつ する", stripes:[ "#5ee6ff","#8aff80","#c77dff" ]},
+  {en:"practice", jp:"練習", hira:"れんしゅう", stripes:[ "#ff7eb9","#fff680","#5ee6ff" ]},
+  {en:"exercise", jp:"運動", hira:"うんどう", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"study", jp:"勉強", hira:"べんきょう", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"promise", jp:"約束", hira:"やくそく", stripes:[ "#fff680","#5ee6ff","#ff7eb9" ]},
+  {en:"reward", jp:"ごほうび", hira:"ごほうび", stripes:[ "#5ee6ff","#fff680","#8aff80" ]}
+];
+
+const SENTENCES = [
+  {en:"I will study every day.", jp:"毎日勉強します。", hira:"まいにち べんきょう します", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"I’m going to try something new.", jp:"新しいことに挑戦します。", hira:"あたらしい こと に ちょうせん します", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"I will do my best this year.", jp:"今年は全力を尽くします。", hira:"ことし は ぜんりょく を つくし ます", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"I will make a new friend.", jp:"新しい友だちを作ります。", hira:"あたらしい ともだち を つくり ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will not be late anymore.", jp:"もう遅刻しません。", hira:"もう ちこく しません", stripes:[ "#ff7eb9","#5ee6ff","#fff680" ]},
+  {en:"I will help my classmates.", jp:"クラスメイトを手伝います。", hira:"クラスメイト を てつだい ます", stripes:[ "#fff680","#8aff80","#c77dff" ]},
+  {en:"I will clean my desk today.", jp:"今日は机を片づけます。", hira:"きょう は つくえ を かたづけ ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I will read more books.", jp:"もっと本を読みます。", hira:"もっと ほん を よみ ます", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"I will start a good habit.", jp:"良い習慣を始めます。", hira:"よい しゅうかん を はじめ ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will speak more English.", jp:"もっと英語を話します。", hira:"もっと えいご を はなし ます", stripes:[ "#fff680","#5ee6ff","#c77dff" ]},
+  {en:"I will write in my diary every week.", jp:"毎週日記を書きます。", hira:"まいしゅう にっき を かき ます", stripes:[ "#ff7eb9","#8aff80","#fff680" ]},
+  {en:"I will wake up earlier.", jp:"もっと早く起きます。", hira:"もっと はやく おき ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I will listen carefully in class.", jp:"授業でしっかり聞きます。", hira:"じゅぎょう で しっかり きき ます", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"I will smile more.", jp:"もっと笑います。", hira:"もっと わらい ます", stripes:[ "#8aff80","#ff7eb9","#fff680" ]},
+  {en:"I will enjoy learning.", jp:"学ぶことを楽しみます。", hira:"まなぶ こと を たのしみ ます", stripes:[ "#5ee6ff","#fff680","#ff7eb9" ]},
+  {en:"I’m going to join a club this semester.", jp:"今学期はクラブに入るつもりです。", hira:"こんがっき は くらぶ に はいる つもり です", stripes:[ "#c77dff","#5ee6ff","#8aff80" ]},
+  {en:"I’m meeting my friend to plan our goals.", jp:"友だちと目標を計画するために会います。", hira:"ともだち と もくひょう を けいかく する ため に あい ます", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"By March, I will have read five books.", jp:"３月までに本を５冊読んでいるつもりです。", hira:"さんがつ まで に ほん を ごさつ よんで いる つもり です", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"I might start running on weekends.", jp:"週末に走り始めるかもしれません。", hira:"しゅうまつ に はしり はじめる かも しれません", stripes:[ "#ff7eb9","#c77dff","#5ee6ff" ]},
+  {en:"I have decided to keep a study journal.", jp:"勉強ノートを続けることに決めました。", hira:"べんきょう のーと を つづける こと に きめ ました", stripes:[ "#fff680","#5ee6ff","#8aff80" ]}
+];
+
+const QUESTIONS = [
+  {en:"What goal will you set this month?", jp:"今月はどんな目標を立てますか。", hira:"こんげつ は どんな もくひょう を たて ます か", stripes:[ "#5ee6ff","#ff7eb9","#fff680" ]},
+  {en:"Are you going to try something new this week?", jp:"今週、新しいことに挑戦しますか。", hira:"こんしゅう あたらしい こと に ちょうせん します か", stripes:[ "#8aff80","#5ee6ff","#c77dff" ]},
+  {en:"When will you start your new habit?", jp:"新しい習慣はいつ始めますか。", hira:"あたらしい しゅうかん は いつ はじめ ます か", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"How will you practice English every day?", jp:"毎日どうやって英語を練習しますか。", hira:"まいにち どうやって えいご を れんしゅう します か", stripes:[ "#ff7eb9","#5ee6ff","#8aff80" ]},
+  {en:"Who will help you reach your goal?", jp:"目標を達成するのを誰が手伝いますか。", hira:"もくひょう を たっせい する の を だれ が てつだい ます か", stripes:[ "#5ee6ff","#fff680","#c77dff" ]},
+  {en:"What are you doing this weekend to improve yourself?", jp:"今週末は自分を伸ばすために何をしますか。", hira:"こんしゅうまつ は じぶん を のばす ため に なに を します か", stripes:[ "#8aff80","#ff7eb9","#5ee6ff" ]},
+  {en:"Where will you study after school today?", jp:"今日放課後はどこで勉強しますか。", hira:"きょう ほうかご は どこ で べんきょう します か", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"Why did you choose that goal?", jp:"なぜその目標を選びましたか。", hira:"なぜ その もくひょう を えらび ました か", stripes:[ "#5ee6ff","#ff7eb9","#8aff80" ]},
+  {en:"How many books will you read this year?", jp:"今年は本を何冊読みますか。", hira:"ことし は ほん を なんさつ よみ ます か", stripes:[ "#c77dff","#fff680","#5ee6ff" ]},
+  {en:"What will you stop doing to save time?", jp:"時間を節約するために何をやめますか。", hira:"じかん を せつやく する ため に なに を やめ ます か", stripes:[ "#5ee6ff","#8aff80","#fff680" ]},
+  {en:"Are you going to join a club this semester?", jp:"今学期はクラブに入りますか。", hira:"こんがっき は くらぶ に はい ります か", stripes:[ "#ff7eb9","#5ee6ff","#c77dff" ]},
+  {en:"What will you do if you make a mistake?", jp:"もし間違えたらどうしますか。", hira:"もし まちがえ たら どう します か", stripes:[ "#8aff80","#fff680","#5ee6ff" ]},
+  {en:"Who are you meeting to plan your goals?", jp:"目標を計画するために誰と会いますか。", hira:"もくひょう を けいかく する ため に だれ と あい ます か", stripes:[ "#5ee6ff","#c77dff","#fff680" ]},
+  {en:"When are you going to start your routine?", jp:"いつ日課を始めますか。", hira:"いつ にっか を はじめ ます か", stripes:[ "#fff680","#5ee6ff","#8aff80" ]},
+  {en:"What will you do better than last year?", jp:"去年より何をもっと上手にしますか。", hira:"きょねん より なに を もっと じょうず に します か", stripes:[ "#5ee6ff","#ff7eb9","#8aff80" ]},
+  {en:"How will you reward yourself?", jp:"どうやって自分にごほうびをあげますか。", hira:"どうやって じぶん に ごほうび を あげ ます か", stripes:[ "#c77dff","#5ee6ff","#fff680" ]},
+  {en:"What are you not going to do this year?", jp:"今年は何をしないつもりですか。", hira:"ことし は なに を しない つもり です か", stripes:[ "#8aff80","#5ee6ff","#fff680" ]},
+  {en:"How will you track your progress?", jp:"進歩をどうやって記録しますか。", hira:"しんぽ を どうやって きろく します か", stripes:[ "#fff680","#8aff80","#5ee6ff" ]},
+  {en:"Which habit will be the hardest to keep?", jp:"どの習慣が一番続けにくいですか。", hira:"どの しゅうかん が いちばん つづけ にくい です か", stripes:[ "#ff7eb9","#5ee6ff","#8aff80" ]},
+  {en:"What will you learn first?", jp:"最初に何を学びますか。", hira:"さいしょ に なに を まなび ます か", stripes:[ "#5ee6ff","#fff680","#c77dff" ]}
+];
+
+/* QUIZ — fixed: “He is ___ to join the basketball club.” correct -> "going to" */
+const QUIZ = [
+  {q:"I ___ write my goals tonight.", opts:["am going","am going to","will","going to"], a:2, ex:"Decision at the moment → will."},
+  {q:"She is ___ start a diary next week.", opts:["going to","will to","go to","going"], a:0, ex:"Planned intention → going to + base."},
+  {q:"We ___ late anymore.", opts:["won't be","aren't be","don't be","not be"], a:0, ex:"Negative future of be → won't be."},
+  {q:"What are you ___ this weekend?", opts:["do","doing","did","done"], a:1, ex:"Present continuous for near-future plan."},
+  {q:"By March, I ___ five books.", opts:["will read","am read","will have read","have read"], a:2, ex:"Future perfect."},
+  {q:"He is ___ to join the basketball club.", opts:["going to","is going","will","to going"], a:0, ex:"Form: be + going to + verb."},
+  {q:"I think she ___ enjoy the class.", opts:["is going to","going","am going to","are going"], a:0, ex:"Prediction → going to (will also OK)."},
+  {q:"I promise I ___ my best.", opts:["will do","am doing","going to do","do"], a:0, ex:"Promises → will."},
+  {q:"What time ___ you start your new routine?", opts:["are","do","will","did"], a:2, ex:"Future question → will."},
+  {q:"He ___ coffee every morning.", opts:["will drink","drinks","is drinking","going to drink"], a:1, ex:"Habit → simple present."},
+  {q:"I ___ help you after school.", opts:["am going to","go to","am going","be going"], a:0, ex:"Intention already decided."},
+  {q:"They ___ a mistake if they rush.", opts:["will make","are making","make","going to make"], a:0, ex:"Future result → will."},
+  {q:"Where ___ you study today?", opts:["are","do","will","is"], a:2, ex:"Future plan question → will."},
+  {q:"She ___ late because she set an alarm.", opts:["won't be","isn't being","doesn't be","isn't"], a:0, ex:"Future negative of be."},
+  {q:"I ___ a good habit this month.", opts:["start","am starting","will starting","to start"], a:1, ex:"Present continuous for planned future."},
+  {q:"If I have time, I ___ read more.", opts:["am going to","will","going","am"], a:1, ex:"Conditional → will."},
+  {q:"We ___ our goals on Sunday.", opts:["discuss","are going to discuss","will discussing","going to discuss"], a:1, ex:"going to + base."},
+  {q:"___ you join any club this year?", opts:["Do","Did","Will","Are"], a:2, ex:"Will you…?"},
+  {q:"I’m not sure, but I ___ start running.", opts:["will","am","am going to","might"], a:3, ex:"Modal of possibility."},
+  {q:"By the end of the week, she ___ her desk.", opts:["will tidy","will have tidied","is tidying","has tidy"], a:1, ex:"Future perfect."}
+];
+
+// ---------- STATE + ELEMENTS ----------
+let MODE = "vocab"; // vocab | sentences | questions | quiz
+let idx = 0, flipped = false, score = 0, qIndex = 0, firstAttempt = true, gotIt = false;
+
+const card = document.getElementById('card');
+const frontTitle = document.getElementById('frontTitle');
+const frontSub = document.getElementById('frontSub');
+const backTitle = document.getElementById('backTitle');
+const backSub = document.getElementById('backSub');
+
+const cardsStage = document.getElementById('cardsStage');
+const quizStage  = document.getElementById('quizStage');
+const qprog = document.getElementById('qprog');
+const scoreEl = document.getElementById('score');
+const qtext = document.getElementById('qtext');
+const opts = document.getElementById('opts');
+const explain = document.getElementById('explain');
+
+// Tabs
+document.querySelectorAll('.tab').forEach(b=>{
+  b.addEventListener('click',()=>setMode(b.dataset.mode, b));
 });
 
-let score=0,qIndex=0;
-function startQuiz(){score=0;qIndex=0;scoreEl.textContent=`Score: ${score}`;showQ();}
+// ---------- HELPERS ----------
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// Build shuffled runs per visit
+let VOCAB_RUN = shuffle(VOCAB);
+let SENT_RUN  = shuffle(SENTENCES);
+let QUES_RUN  = shuffle(QUESTIONS);
+let QUIZ_RUN  = []; // set on quiz start
+
+// ---------- RENDER ----------
+function activeList(){
+  if (MODE==="vocab") return VOCAB_RUN;
+  if (MODE==="sentences") return SENT_RUN;
+  if (MODE==="questions") return QUES_RUN;
+  return [];
+}
+function renderCard(){
+  const list = activeList();
+  const item = list[idx];
+  // stripes + animation constant
+  card.style.backgroundImage = stripes(item.stripes[0], item.stripes[1], item.stripes[2]);
+  frontTitle.textContent = item.en;
+  frontSub.textContent   = "";           // (English-only front)
+  backTitle.textContent  = item.jp;
+  backSub.textContent    = `(${item.hira})`;
+  card.classList.toggle('is-back', flipped);
+}
+function setMode(m, btnEl){
+  document.querySelectorAll('.modes button').forEach(b=>b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  MODE = m; idx = 0; flipped = false;
+  if (MODE==="quiz"){
+    cardsStage.classList.add('hidden');
+    quizStage.classList.remove('hidden');
+    startQuiz();
+  } else {
+    quizStage.classList.add('hidden');
+    cardsStage.classList.remove('hidden');
+    renderCard();
+  }
+}
+
+// ---------- QUIZ FLOW (stacked answers, scoring rule) ----------
+function startQuiz(){
+  QUIZ_RUN = shuffle(QUIZ);
+  score = 0; qIndex = 0;
+  scoreEl.textContent = `Score: ${score}`;
+  showQ();
+}
 function showQ(){
-  const item=QUIZ[qIndex];
-  qprog.textContent=`${qIndex+1} / ${QUIZ.length}`;
-  qtext.textContent=item.q;opts.innerHTML="";explain.textContent="";
+  firstAttempt = true; gotIt = false;
+  const item = QUIZ_RUN[qIndex];
+  qprog.textContent = `${qIndex+1} / ${QUIZ_RUN.length}`;
+  qtext.textContent = item.q;
+  opts.innerHTML = "";
+  explain.textContent = "";
+
   item.opts.forEach((t,i)=>{
-    const b=document.createElement('button');
-    b.className='opt';b.textContent=t;
-    b.onclick=()=>{
-      if(i===item.a){
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = t;
+    b.addEventListener('click', ()=>{
+      if (gotIt) return;
+      const correct = i===item.a;
+      if (correct){
         b.classList.add('correct');
-        explain.textContent=item.ex;
-        score++;scoreEl.textContent=`Score: ${score}`;
-        setTimeout(()=>{qIndex++;if(qIndex<QUIZ.length)showQ();else endQuiz();},1200);
-      }else{b.classList.add('wrong');}
-    };
+        burstConfettiFrom(b);
+        gotIt = true;
+        if (firstAttempt){ score++; scoreEl.textContent = `Score: ${score}`; }
+        [...opts.children].forEach(btn=>btn.disabled=true);
+        explain.textContent = item.ex;
+      } else {
+        b.classList.add('wrong');
+        firstAttempt = false;
+      }
+    });
     opts.appendChild(b);
   });
 }
-function endQuiz(){
-  qtext.textContent="Finished! Great job.";
-  opts.innerHTML="";
-  explain.innerHTML=`Your final score is <b>${score}</b> / ${QUIZ.length}.`;
+document.getElementById('nextQ').addEventListener('click', ()=>{
+  if (qIndex < QUIZ_RUN.length-1){ qIndex++; showQ(); }
+  else{
+    qtext.textContent = "Finished! Great job.";
+    opts.innerHTML = "";
+    explain.innerHTML = `Your final score is <b>${score}</b> / ${QUIZ_RUN.length}.`;
+  }
+});
+
+// ---------- Card controls ----------
+document.getElementById('flipBtn').addEventListener('click', ()=>{flipped=!flipped;renderCard()});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  const list = activeList(); idx = (idx+1) % list.length; flipped=false; renderCard();
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  const list = activeList(); idx = (idx-1+list.length) % list.length; flipped=false; renderCard();
+});
+
+// ---------- Speech (English only, front side) ----------
+const synth = window.speechSynthesis;
+function speak(text){
+  if (!text) return;
+  if (synth.speaking) synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US";
+  u.rate = 0.95;
+  u.pitch = 1.0;
+  synth.speak(u);
 }
+document.getElementById('speakBtn').addEventListener('click', ()=>{
+  if (MODE === 'quiz') return;        // speak only in card modes
+  const list = activeList();
+  const item = list[idx];
+  // Always read English (front)
+  speak(item.en);
+});
+
+// init: start on vocab (active button already set in markup)
 renderCard();
 </script>
 </body>
