@@ -23,6 +23,7 @@
       align-items:center;
       justify-content:center;
       color:#111;
+      position:relative;
     }
     body::before{
       content:"";
@@ -123,10 +124,23 @@
       font-size:1.1rem;
     }
 
-    /* duplicate keyframes kept as-is per your original */
     @keyframes bgmove{
       0%{background-position:0 0;}
       100%{background-position:300% 300%;}
+    }
+
+    /* Footer */
+    footer{
+      position:fixed;
+      bottom:18px;
+      left:0;
+      width:100%;
+      text-align:center;
+      color:#d1d5db;
+      font-family:'Cinzel',serif;
+      font-size:clamp(14px,2vw,18px);
+      letter-spacing:1px;
+      opacity:0.9;
     }
   </style>
 </head>
@@ -153,6 +167,10 @@
     <button class="btn" id="nextBtn">Next ❯</button>
   </div>
 
+  <footer>
+    Bryan's English School
+  </footer>
+
   <script>
   const CARDS=[
     {en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff6ec7","#5ee6ff","#ffd166"]},
@@ -171,6 +189,15 @@
     {en:"focus",jp:"集中",hira:"しゅうちゅう",stripes:["#8aff80","#ff7eb9","#ffd166"]},
     {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
   ];
+
+  // Shuffle the deck so order changes each visit
+  function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [array[i],array[j]]=[array[j],array[i]];
+    }
+  }
+  shuffle(CARDS);
 
   let i=0,back=false;
   const card=document.getElementById('card');
@@ -203,7 +230,7 @@
   document.getElementById('backMenu').addEventListener('click', (e)=>{
     e.preventDefault();
     if (document.referrer) history.back();
-    else window.location.href = 'index.html'; // <- change if your menu lives elsewhere
+    else window.location.href = 'index.html';
   });
 
   show();
