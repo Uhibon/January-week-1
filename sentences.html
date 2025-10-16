@@ -201,7 +201,7 @@
 
   async function speak(text){
     try{
-      const res=await fetch("https://www.bryanharper.tokyo/_functions/tts",{  // your Wix custom domain
+      const res=await fetch("https://www.bryanharper.wixsite/_functions/tts",{  // your Wix custom domain
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({text})
