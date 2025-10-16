@@ -34,7 +34,6 @@
       opacity:.25;
     }
 
-    /* Back to Menu button */
     .back-btn{
       position:fixed;
       top:14px; left:14px;
@@ -45,15 +44,11 @@
       background:#0b1020;
       color:#fff;
       border:1px solid rgba(255,255,255,.25);
-      box-shadow:0 10px 25px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
+      box-shadow:0 10px 25px rgba(0,0,0,.35);
       font-weight:800; font-size:.95rem;
       text-decoration:none;
       -webkit-tap-highlight-color: transparent;
-      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
     }
-    .back-btn:hover{ transform:translateY(-1px); }
-    .back-btn:active{ transform:translateY(0); box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);}
-    .back-btn .arrow{font-weight:900}
 
     header{text-align:center;color:#fff;margin-bottom:20px;}
     header h1{
@@ -85,11 +80,9 @@
       background-size: 400% 400%;
       animation: bgmove 12s linear infinite;
     }
-
-    /* smooth diagonal motion */
     @keyframes bgmove {
-      from { background-position: 0 0; }
-      to { background-position: 400% 400%; }
+      0%{background-position:0 0;}
+      100%{background-position:300% 300%;}
     }
 
     .card.is-back{transform:rotateY(180deg)}
@@ -112,7 +105,7 @@
     }
     .term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#333;}
 
-    .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;}
+    .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
     button.btn{
       padding:1rem 1.3rem;
       border-radius:16px;
@@ -123,13 +116,19 @@
       cursor:pointer;
       font-size:1.1rem;
     }
-
-    @keyframes bgmove{
-      0%{background-position:0 0;}
-      100%{background-position:300% 300%;}
+    #speakBtn{
+      background:linear-gradient(180deg,#ff4444,#cc0000);
+      color:#fff;
+      font-size:1.3rem;
+      line-height:1;
+      padding:1rem 1.5rem;
+      border:none;
+      border-radius:16px;
+      box-shadow:0 0 20px rgba(255,0,0,.4);
+      transition:transform .15s;
     }
+    #speakBtn:hover{transform:scale(1.1)}
 
-    /* Footer */
     footer{
       position:fixed;
       bottom:18px;
@@ -145,7 +144,6 @@
   </style>
 </head>
 <body>
-  <!-- Back button -->
   <a href="#" class="back-btn" id="backMenu"><span class="arrow">❮</span> Back to Menu</a>
 
   <header>
@@ -165,6 +163,7 @@
     <button class="btn" id="prevBtn">❮ Prev</button>
     <button class="btn" id="flipBtn">Flip ⤾</button>
     <button class="btn" id="nextBtn">Next ❯</button>
+    <button id="speakBtn">▶</button>
   </div>
 
   <footer>
@@ -190,13 +189,8 @@
     {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
   ];
 
-  // Shuffle the deck so order changes each visit
-  function shuffle(array){
-    for(let i=array.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [array[i],array[j]]=[array[j],array[i]];
-    }
-  }
+  // Shuffle order
+  function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
   shuffle(CARDS);
 
   let i=0,back=false;
@@ -205,33 +199,38 @@
   const backTitle=document.getElementById('backTitle');
   const backSub=document.getElementById('backSub');
 
-  function show() {
-    const c = CARDS[i];
-    card.style.background = `repeating-linear-gradient(45deg,
+  const synth = window.speechSynthesis;
+  function speak(text){
+    if(synth.speaking) synth.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="en-US";
+    u.rate=0.9;
+    synth.speak(u);
+  }
+
+  function show(){
+    const c=CARDS[i];
+    card.style.background=`repeating-linear-gradient(45deg,
       ${c.stripes[0]} 0%,
       ${c.stripes[0]} 3%,
       ${c.stripes[1]} 3%,
       ${c.stripes[1]} 6%,
       ${c.stripes[2]} 6%,
       ${c.stripes[2]} 9%)`;
-    card.style.backgroundSize = '400% 400%';
-    card.style.animation = 'bgmove 12s linear infinite';
-    frontTitle.textContent = c.en;
-    backTitle.textContent = c.jp;
-    backSub.textContent = c.hira;
+    card.style.backgroundSize='400% 400%';
+    card.style.animation='bgmove 12s linear infinite';
+    frontTitle.textContent=c.en;
+    backTitle.textContent=c.jp;
+    backSub.textContent=c.hira;
     card.classList.toggle('is-back', back);
   }
 
-  document.getElementById('flipBtn').addEventListener('click',()=>{back=!back;show()});
-  document.getElementById('nextBtn').addEventListener('click',()=>{i=(i+1)%CARDS.length;back=false;show()});
-  document.getElementById('prevBtn').addEventListener('click',()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show()});
+  document.getElementById('flipBtn').onclick=()=>{back=!back;show()};
+  document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show()};
+  document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show()};
+  document.getElementById('speakBtn').onclick=()=>{if(!back) speak(CARDS[i].en);};
 
-  // Back button logic
-  document.getElementById('backMenu').addEventListener('click', (e)=>{
-    e.preventDefault();
-    if (document.referrer) history.back();
-    else window.location.href = 'index.html';
-  });
+  document.getElementById('backMenu').onclick=(e)=>{e.preventDefault();if(document.referrer)history.back();else location.href='index.html';};
 
   show();
   </script>
