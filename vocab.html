@@ -78,11 +78,13 @@
       box-shadow: 0 30px 80px rgba(0,0,0,.3);
       border: 3px solid rgba(255,255,255,.25);
       background-size: 400% 400%;
-      animation: bgmove 12s linear infinite;
+      animation: hue 8s linear infinite;
     }
-    @keyframes bgmove {
-      0%{background-position:0 0;}
-      100%{background-position:300% 300%;}
+
+    /* hue rotation animation */
+    @keyframes hue {
+      0% {filter:hue-rotate(0deg);}
+      100% {filter:hue-rotate(360deg);}
     }
 
     .card.is-back{transform:rotateY(180deg)}
@@ -189,7 +191,6 @@
     {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
   ];
 
-  // Shuffle order
   function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
   shuffle(CARDS);
 
@@ -198,8 +199,8 @@
   const frontTitle=document.getElementById('frontTitle');
   const backTitle=document.getElementById('backTitle');
   const backSub=document.getElementById('backSub');
+  const synth=window.speechSynthesis;
 
-  const synth = window.speechSynthesis;
   function speak(text){
     if(synth.speaking) synth.cancel();
     const u=new SpeechSynthesisUtterance(text);
@@ -217,19 +218,16 @@
       ${c.stripes[1]} 6%,
       ${c.stripes[2]} 6%,
       ${c.stripes[2]} 9%)`;
-    card.style.backgroundSize='400% 400%';
-    card.style.animation='bgmove 12s linear infinite';
     frontTitle.textContent=c.en;
     backTitle.textContent=c.jp;
     backSub.textContent=c.hira;
-    card.classList.toggle('is-back', back);
+    card.classList.toggle('is-back',back);
   }
 
   document.getElementById('flipBtn').onclick=()=>{back=!back;show()};
   document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show()};
   document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show()};
   document.getElementById('speakBtn').onclick=()=>{if(!back) speak(CARDS[i].en);};
-
   document.getElementById('backMenu').onclick=(e)=>{e.preventDefault();if(document.referrer)history.back();else location.href='index.html';};
 
   show();
