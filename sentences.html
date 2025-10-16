@@ -170,7 +170,7 @@
     Bryan's English School
   </footer>
 
-  <script>
+   <script>
   const CARDS=[
     {en:"I will study every day.",jp:"毎日勉強します。",hira:"まいにち べんきょう します",stripes:["#ff6ec7","#5ee6ff","#ffd166"]},
     {en:"I’m going to try something new.",jp:"新しいことに挑戦します。",hira:"あたらしい こと に ちょうせん します",stripes:["#5ee6ff","#ffd166","#c77dff"]},
@@ -189,6 +189,7 @@
     {en:"I will enjoy learning.",jp:"学ぶことを楽しみます。",hira:"まなぶ こと を たのしみ ます",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
   ];
 
+
   // Shuffle order
   function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
   shuffle(CARDS);
@@ -199,29 +200,24 @@
   const backTitle=document.getElementById('backTitle');
   const backSub=document.getElementById('backSub');
 
-  async function speak(text){
-    try{
-      const res=await fetch("https://www.bryanharper.wixsite/_functions/tts",{  // your Wix custom domain
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({text})
-      });
-      if(!res.ok) throw new Error("TTS request failed");
-      const { audio } = await res.json(); // base64 string from Wix
-      const url = "data:audio/mpeg;base64," + audio;
-      new Audio(url).play();
-    }catch(err){
-      console.error(err);
-      alert("Voice playback failed.");
-    }
+  const synth = window.speechSynthesis;
+  function speak(text){
+    if(synth.speaking) synth.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="en-US";
+    u.rate=0.9;
+    synth.speak(u);
   }
 
   function show(){
     const c=CARDS[i];
     card.style.background=`repeating-linear-gradient(45deg,
-      ${c.stripes[0]} 0%, ${c.stripes[0]} 3%,
-      ${c.stripes[1]} 3%, ${c.stripes[1]} 6%,
-      ${c.stripes[2]} 6%, ${c.stripes[2]} 9%)`;
+      ${c.stripes[0]} 0%,
+      ${c.stripes[0]} 3%,
+      ${c.stripes[1]} 3%,
+      ${c.stripes[1]} 6%,
+      ${c.stripes[2]} 6%,
+      ${c.stripes[2]} 9%)`;
     card.style.backgroundSize='400% 400%';
     card.style.animation='bgmove 12s linear infinite';
     frontTitle.textContent=c.en;
