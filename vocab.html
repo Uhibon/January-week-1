@@ -17,19 +17,19 @@ html,body{
   height:100%;
   font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
   background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:#111;position:relative;overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#111; position:relative; overflow:hidden;
 }
 body::before{
-  content:"";position:fixed;inset:0;z-index:-1;
-  background-image:var(--bg);background-size:cover;background-position:center;opacity:.25;
+  content:""; position:fixed; inset:0; z-index:-1;
+  background-image:var(--bg); background-size:cover; background-position:center; opacity:.25;
 }
 .back-btn{
-  position:fixed;top:14px;left:14px;z-index:1000;
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.55rem .9rem;border-radius:999px;background:#0b1020;color:#fff;
-  border:1px solid rgba(255,255,255,.25);box-shadow:0 10px 25px rgba(0,0,0,.35);
-  font-weight:800;font-size:.95rem;text-decoration:none;-webkit-tap-highlight-color:transparent;
+  position:fixed; top:14px; left:14px; z-index:1000;
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.55rem .9rem; border-radius:999px; background:#0b1020; color:#fff;
+  border:1px solid rgba(255,255,255,.25); box-shadow:0 10px 25px rgba(0,0,0,.35);
+  font-weight:800; font-size:.95rem; text-decoration:none; -webkit-tap-highlight-color:transparent;
 }
 header{text-align:center;color:#fff;margin-bottom:20px;}
 header h1{font-family:'Cinzel',serif;font-size:clamp(26px,4.5vw,50px);letter-spacing:1px;margin-bottom:10px;font-weight:900;}
@@ -38,22 +38,28 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 
 .card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
 .card{
-  position:relative;width:100%;height:100%;
-  border-radius:var(--radius);transform-style:preserve-3d;
+  position:relative; width:100%; height:100%;
+  border-radius:var(--radius); transform-style:preserve-3d;
   transition:transform .7s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 30px 80px rgba(0,0,0,.3);
   border:3px solid rgba(255,255,255,.25);
   background-size:100% 240px;
   animation:stripeDown 6s linear infinite;
 }
-@keyframes stripeDown{0%{background-position:0 0;}100%{background-position:0 240px;}}
+@keyframes stripeDown{
+  0%{background-position:0 0;}
+  100%{background-position:0 240px;}
+}
 .card.is-back{transform:rotateY(180deg);}
-.face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:1rem;
-  background:transparent;}
+.face{
+  position:absolute; inset:0; border-radius:var(--radius);
+  backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; text-align:center; padding:1rem;
+  background:transparent;
+}
 .face.back{transform:rotateY(180deg);}
-.term h2{margin:0;font-size:clamp(40px,8vw,90px);font-weight:900;line-height:1.1;color:#111;
-  text-shadow:0 2px 6px rgba(255,255,255,.6);}
+.term h2{margin:0;font-size:clamp(40px,8vw,90px);font-weight:900;line-height:1.1;color:#111;text-shadow:0 2px 6px rgba(255,255,255,.6);}
 .term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#333;}
 
 .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
@@ -79,47 +85,49 @@ footer{
 </style>
 </head>
 <body>
-<a href="#" class="back-btn" id="backMenu"><span class="arrow">❮</span> Back to Menu</a>
+  <a href="#" class="back-btn" id="backMenu"><span class="arrow">❮</span> Back to Menu</a>
 
-<header>
-  <h1>The Boo-riculum</h1>
-  <h2>January Week 1</h2>
-  <h3>１月第１週</h3>
-</header>
+  <header>
+    <h1>The Boo-riculum</h1>
+    <h2>January Week 1</h2>
+    <h3>１月第１週</h3>
+  </header>
 
-<div class="card-outer">
-  <article class="card" id="card">
-    <div class="face front">
-      <div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div>
-    </div>
-    <div class="face back">
-      <div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div>
-    </div>
-  </article>
-</div>
+  <div class="card-outer">
+    <article class="card" id="card">
+      <div class="face front">
+        <div class="term">
+          <h2 id="frontTitle"></h2>
+          <p id="frontSub"></p>
+        </div>
+      </div>
+      <div class="face back">
+        <div class="term">
+          <h2 id="backTitle"></h2>
+          <p id="backSub"></p>
+        </div>
+      </div>
+    </article>
+  </div>
 
-<div class="actions">
-  <button class="btn" id="prevBtn">❮ Prev</button>
-  <button class="btn" id="flipBtn">Flip ⤾</button>
-  <button class="btn" id="nextBtn">Next ❯</button>
-  <button id="speakBtn">▶</button>
-</div>
+  <div class="actions">
+    <button class="btn" id="prevBtn">❮ Prev</button>
+    <button class="btn" id="flipBtn">Flip ⤾</button>
+    <button class="btn" id="nextBtn">Next ❯</button>
+    <button id="speakBtn">▶</button>
+  </div>
 
-<footer>Bryan's English School</footer>
+  <footer>Bryan's English School</footer>
 
 <script>
-/* Palettes @ 50% opacity */
-function fade(c){return c.replace(')',',0.5)').replace('rgb','rgba');}
-const PALETTES=[
- ["#ff007f","#00c3ff","#ffe600","#39ff14","#8b00ff","#ff4d4d"],
- ["#ff4b1f","#1fddff","#f9ed69","#00ff9c","#d16ba5","#8ef6e4"],
- ["#ff6ec7","#5ee6ff","#fff680","#a6f7b2","#c77dff","#7dd3fc"],
- ["#ff9f00","#ff00a6","#00ffe1","#ffee00","#00d9ff","#ff6b6b"],
- ["#ff5f6d","#ffc371","#00c9ff","#92fe9d","#a890fe","#fbc8d4"]
-].map(p=>p.map(x=>x.replace('#','rgba('+
-  parseInt(x.slice(1,3),16)+','+
-  parseInt(x.slice(3,5),16)+','+
-  parseInt(x.slice(5,7),16)+',0.5)')));
+/* Stripe palettes (dimmed 50%) */
+const PALETTES = [
+  ["rgba(255,0,127,.5)","rgba(0,195,255,.5)","rgba(255,230,0,.5)","rgba(57,255,20,.5)","rgba(139,0,255,.5)","rgba(255,77,77,.5)"],
+  ["rgba(255,75,31,.5)","rgba(31,221,255,.5)","rgba(249,237,105,.5)","rgba(0,255,156,.5)","rgba(209,107,165,.5)","rgba(142,246,228,.5)"],
+  ["rgba(255,110,199,.5)","rgba(94,230,255,.5)","rgba(255,246,128,.5)","rgba(166,247,178,.5)","rgba(199,125,255,.5)","rgba(125,211,252,.5)"],
+  ["rgba(255,159,0,.5)","rgba(255,0,166,.5)","rgba(0,255,225,.5)","rgba(255,238,0,.5)","rgba(0,217,255,.5)","rgba(255,107,107,.5)"],
+  ["rgba(255,95,109,.5)","rgba(255,195,113,.5)","rgba(0,201,255,.5)","rgba(146,254,157,.5)","rgba(168,144,254,.5)","rgba(251,200,212,.5)"]
+];
 
 const CARDS=[
   {en:"goal",jp:"目標",hira:"もくひょう"},
@@ -139,55 +147,73 @@ const CARDS=[
   {en:"motivation",jp:"やる気",hira:"やるき"}
 ];
 
+/* Shuffle */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 shuffle(CARDS);
 
-let i=0,back=false;
+let i=0, back=false;
 const card=document.getElementById('card');
 const frontTitle=document.getElementById('frontTitle');
 const frontSub=document.getElementById('frontSub');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
 
-/* build background stripes */
+/* Stripe builder */
 function buildStripeBackground(colors){
-  const band=40;let stops=[];
-  colors.forEach((c,idx)=>{const start=idx*band;stops.push(`${c} ${start}px ${start+band}px`);});
+  const band=40; let stops=[];
+  colors.forEach((c,idx)=>{
+    const start=idx*band;
+    stops.push(`${c} ${start}px ${start+band}px`);
+  });
   const all=stops.concat(stops.map(s=>s.replace(/(\d+)px/g,(m,n)=>(parseInt(n)+band*colors.length)+'px')));
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-/* Sparkle sound (tiny cached audio) */
-const sparkle=new Audio("https://static.wixstatic.com/mp3/11062a_5b009f37a0b946ed99a29eea6cb0182f.mp3");
-
-/* --- Cached Sage TTS --- */
-const ttsCache={};
+/* Cached Sage TTS */
 async function speak(text){
   if(!text) return;
-  const key=text.toLowerCase();
+  const key=`sage_${text}`;
+  const cached=localStorage.getItem(key);
   try{
-    sparkle.currentTime=0; sparkle.play().catch(()=>{});
-    if(ttsCache[key]){ new Audio(ttsCache[key]).play(); return; }
-    const local=localStorage.getItem("sage_"+key);
-    if(local){ ttsCache[key]=local; new Audio(local).play(); return; }
-    const url=`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`;
-    const audio=new Audio(url);
-    ttsCache[key]=url; localStorage.setItem("sage_"+key,url);
-    await audio.play().catch(err=>setTimeout(()=>audio.play().catch(console.warn),300));
-  }catch(err){console.error("Sage TTS error:",err);}
+    let audio;
+    if(cached){
+      audio=new Audio(cached);
+    }else{
+      const url=`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`;
+      const res=await fetch(url);
+      const blob=await res.blob();
+      const reader=new FileReader();
+      reader.onloadend=()=>{
+        const dataUrl=reader.result;
+        try{localStorage.setItem(key,dataUrl);}catch(e){console.warn("Cache full or blocked:",e);}
+        const a=new Audio(dataUrl);
+        a.play().catch(console.warn);
+      };
+      reader.readAsDataURL(blob);
+      return;
+    }
+    await audio.play().catch(err=>{
+      console.warn("Playback blocked:",err);
+      setTimeout(()=>audio.play().catch(console.warn),300);
+    });
+  }catch(err){
+    console.error("Sage TTS error:",err);
+  }
 }
 
-/* show current card */
+/* Show current card */
 function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
   card.style.backgroundImage=buildStripeBackground(palette);
-  frontTitle.textContent=c.en;frontSub.textContent=c.hira;
-  backTitle.textContent=c.jp;backSub.textContent=c.hira;
+  frontTitle.textContent=c.en;
+  frontSub.textContent=c.hira;
+  backTitle.textContent=c.jp;
+  backSub.textContent=c.hira;
   card.classList.toggle('is-back',back);
 }
 
-/* controls */
+/* Controls */
 document.getElementById('flipBtn').onclick=()=>{back=!back;show();};
 document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show();};
 document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show();};
