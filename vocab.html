@@ -120,7 +120,7 @@ footer{
   <footer>Bryan's English School</footer>
 
 <script>
-/* 100% vivid color palettes for downward stripes */
+/* Vivid downward stripe palettes */
 const PALETTES = [
   ["#ff007f","#00c3ff","#ffe600","#39ff14","#8b00ff","#ff4d4d"],
   ["#ff4b1f","#1fddff","#f9ed69","#00ff9c","#d16ba5","#8ef6e4"],
@@ -129,7 +129,7 @@ const PALETTES = [
   ["#ff5f6d","#ffc371","#00c9ff","#92fe9d","#a890fe","#fbc8d4"]
 ];
 
-const CARDS = [
+const CARDS=[
   {en:"goal",jp:"目標",hira:"もくひょう"},
   {en:"plan",jp:"計画",hira:"けいかく"},
   {en:"future",jp:"未来",hira:"みらい"},
@@ -147,6 +147,7 @@ const CARDS = [
   {en:"motivation",jp:"やる気",hira:"やるき"}
 ];
 
+/* Shuffle */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 shuffle(CARDS);
 
@@ -157,23 +158,21 @@ const frontSub=document.getElementById('frontSub');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
 
-/* Build the vivid downward stripes */
+/* Build vivid downward stripes */
 function buildStripeBackground(colors){
-  const band=40;
-  let stops=[];
+  const band=40; let stops=[];
   colors.forEach((c,idx)=>{
     const start=idx*band;
     stops.push(`${c} ${start}px ${start+band}px`);
   });
-  const all=stops.concat(stops.map(s=>s.replace(/(\d+)px/g,(m,n)=> (parseInt(n)+band*colors.length)+'px')));
+  const all=stops.concat(stops.map(s=>s.replace(/(\d+)px/g,(m,n)=>(parseInt(n)+band*colors.length)+'px')));
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-/* Speak with Sage */
-let speaking=false;
+/* --- Reliable Sage TTS --- */
 async function speak(text){
+  if(!text) return;
   try{
-    if(speaking) return; speaking=true; setTimeout(()=>speaking=false,400);
     const key='sage_'+encodeURIComponent(text);
     let url=localStorage.getItem(key);
     if(!url){
@@ -181,23 +180,29 @@ async function speak(text){
       const data=await res.json();
       url=data.url; if(url) localStorage.setItem(key,url);
     }
-    if(url && url.startsWith('data:audio')){
-      const base64=url.split(',')[1];
-      const raw=atob(base64);
-      const bytes=new Uint8Array(raw.length);
-      for(let n=0;n<raw.length;n++) bytes[n]=raw.charCodeAt(n);
-      const blob=new Blob([bytes],{type:'audio/mpeg'});
-      const objectUrl=URL.createObjectURL(blob);
-      const audio=new Audio(objectUrl);
-      audio.play().catch(console.warn);
-      audio.onended=()=>URL.revokeObjectURL(objectUrl);
-    } else if(url){
-      new Audio(url).play().catch(console.warn);
-    }
-  }catch(err){console.error('TTS error:',err);}
+
+    if(!url) return;
+
+    // Convert base64 → Blob (fix for Safari/Chrome mobile)
+    const base64=url.split(',')[1];
+    const binary=atob(base64);
+    const bytes=new Uint8Array(binary.length);
+    for(let j=0;j<binary.length;j++) bytes[j]=binary.charCodeAt(j);
+    const blob=new Blob([bytes],{type:'audio/mpeg'});
+    const objectUrl=URL.createObjectURL(blob);
+
+    const audio=new Audio(objectUrl);
+    // ensure playback always starts after user gesture
+    audio.play().catch(()=>{
+      setTimeout(()=>audio.play().catch(console.warn),300);
+    });
+    audio.onended=()=>URL.revokeObjectURL(objectUrl);
+  }catch(err){
+    console.error('Sage TTS error:',err);
+  }
 }
 
-/* Render current card */
+/* Show current card */
 function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
@@ -213,7 +218,7 @@ function show(){
 document.getElementById('flipBtn').onclick=()=>{back=!back;show();};
 document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show();};
 document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show();};
-document.getElementById('speakBtn').onclick=()=>{if(!back)speak(CARDS[i].en);else speak(CARDS[i].jp);};
+document.getElementById('speakBtn').onclick=()=>{const c=CARDS[i];speak(back?c.jp:c.en);};
 document.getElementById('backMenu').onclick=(e)=>{e.preventDefault();if(document.referrer)history.back();else location.href='index.html';};
 
 show();
