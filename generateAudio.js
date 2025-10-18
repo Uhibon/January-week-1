@@ -1,9 +1,10 @@
 // generateAudio.js
-// Run this once locally: node generateAudio.js
-// It will create /assets/audio/ and download all Sage voice mp3s automatically
+// Run once from your repo folder: node generateAudio.js
+// Downloads Sage MP3s to /assets/audio
 
-import fs from "fs";
-import https from "https";
+const fs = require("fs");
+const https = require("https");
+const path = require("path");
 
 const words = [
   "goal","plan","future","dream","challenge","try","change","habit",
@@ -11,16 +12,23 @@ const words = [
 ];
 
 const baseUrl = "https://bryanharper.tokyo/_functions/tts?voice=sage&text=";
-const dir = "./assets/audio";
-
-if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+const outDir = path.join(__dirname, "assets", "audio");
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
 function download(word) {
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(`${dir}/${word}.mp3`);
-    https.get(baseUrl + encodeURIComponent(word), res => {
-      if (res.statusCode !== 200) return reject(`Failed: ${res.statusCode}`);
-      res.pipe(file);
+    const filePath = path.join(outDir, `${word}.mp3`);
+    const file = fs.createWriteStream(filePath);
+
+    https.get(baseUrl + encodeURIComponent(word), (res) => {
+      // follow a single redirect if present
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        https.get(res.headers.location, (res2) => res2.pipe(file));
+      } else if (res.statusCode === 200) {
+        res.pipe(file);
+      } else {
+        return reject(new Error(`HTTP ${res.statusCode} for ${word}`));
+      }
       file.on("finish", () => file.close(() => resolve(word)));
     }).on("error", reject);
   });
@@ -28,13 +36,13 @@ function download(word) {
 
 (async () => {
   console.log("🎧 Generating Sage audio files...");
-  for (const word of words) {
+  for (const w of words) {
     try {
-      await download(word);
-      console.log(`✅ Saved: ${word}.mp3`);
-    } catch (err) {
-      console.error(`❌ ${word}:`, err);
+      await download(w);
+      console.log(`✅ Saved: ${w}.mp3`);
+    } catch (e) {
+      console.error(`❌ ${w}:`, e.message || e);
     }
   }
-  console.log("✨ All audio generated successfully!");
+  console.log("✨ Done. Files are in /assets/audio");
 })();
