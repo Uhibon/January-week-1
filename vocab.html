@@ -173,32 +173,30 @@ function buildStripeBackground(colors){
 async function speak(text){
   if(!text) return;
   try{
-    const key='sage_'+encodeURIComponent(text);
-    let url=localStorage.getItem(key);
+    const key = 'sage_' + encodeURIComponent(text);
+    let url = localStorage.getItem(key);
+
     if(!url){
-      const res=await fetch(`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`,{mode:'cors'});
-      const data=await res.json();
-      url=data.url; if(url) localStorage.setItem(key,url);
+      const res = await fetch(
+        `https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`,
+        { mode: 'cors' }
+      );
+      const data = await res.json();
+      url = data.url;
+      if(url) localStorage.setItem(key, url);
     }
 
     if(!url) return;
 
-    // Convert base64 → Blob (fix for Safari/Chrome mobile)
-    const base64=url.split(',')[1];
-    const binary=atob(base64);
-    const bytes=new Uint8Array(binary.length);
-    for(let j=0;j<binary.length;j++) bytes[j]=binary.charCodeAt(j);
-    const blob=new Blob([bytes],{type:'audio/mpeg'});
-    const objectUrl=URL.createObjectURL(blob);
-
-    const audio=new Audio(objectUrl);
-    // ensure playback always starts after user gesture
-    audio.play().catch(()=>{
-      setTimeout(()=>audio.play().catch(console.warn),300);
+    // ✅ play directly from data URL
+    const audio = new Audio(url);
+    await audio.play().catch(err => {
+      console.warn('Playback blocked:', err);
+      // small delay retry for Safari
+      setTimeout(() => audio.play().catch(console.warn), 300);
     });
-    audio.onended=()=>URL.revokeObjectURL(objectUrl);
-  }catch(err){
-    console.error('Sage TTS error:',err);
+  } catch (err) {
+    console.error('Sage TTS error:', err);
   }
 }
 
