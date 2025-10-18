@@ -59,8 +59,21 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   background:transparent;
 }
 .face.back{transform:rotateY(180deg);}
-.term h2{margin:0;font-size:clamp(40px,8vw,90px);font-weight:900;line-height:1.1;color:#111;text-shadow:0 2px 6px rgba(255,255,255,.6);}
-.term p{margin-top:.5rem;font-size:clamp(20px,3vw,30px);color:#333;}
+.term h2{
+  margin:0;
+  font-size:clamp(48px,9vw,110px);
+  font-weight:900;
+  line-height:1.1;
+  color:#111;
+  text-shadow:0 0 12px rgba(255,255,255,.9),0 0 24px rgba(255,255,255,.7);
+}
+.term p{
+  margin-top:.7rem;
+  font-size:clamp(28px,5vw,46px);
+  font-weight:700;
+  color:#111;
+  text-shadow:0 0 10px rgba(255,255,255,.9),0 0 18px rgba(255,255,255,.6);
+}
 
 .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
 button.btn{
@@ -120,13 +133,13 @@ footer{
   <footer>Bryan's English School</footer>
 
 <script>
-/* Stripe palettes (dimmed 50%) */
+/* Full-color vivid stripe palettes */
 const PALETTES = [
-  ["rgba(255,0,127,.5)","rgba(0,195,255,.5)","rgba(255,230,0,.5)","rgba(57,255,20,.5)","rgba(139,0,255,.5)","rgba(255,77,77,.5)"],
-  ["rgba(255,75,31,.5)","rgba(31,221,255,.5)","rgba(249,237,105,.5)","rgba(0,255,156,.5)","rgba(209,107,165,.5)","rgba(142,246,228,.5)"],
-  ["rgba(255,110,199,.5)","rgba(94,230,255,.5)","rgba(255,246,128,.5)","rgba(166,247,178,.5)","rgba(199,125,255,.5)","rgba(125,211,252,.5)"],
-  ["rgba(255,159,0,.5)","rgba(255,0,166,.5)","rgba(0,255,225,.5)","rgba(255,238,0,.5)","rgba(0,217,255,.5)","rgba(255,107,107,.5)"],
-  ["rgba(255,95,109,.5)","rgba(255,195,113,.5)","rgba(0,201,255,.5)","rgba(146,254,157,.5)","rgba(168,144,254,.5)","rgba(251,200,212,.5)"]
+  ["#ff007f","#00c3ff","#ffe600","#39ff14","#8b00ff","#ff4d4d"],
+  ["#ff4b1f","#1fddff","#f9ed69","#00ff9c","#d16ba5","#8ef6e4"],
+  ["#ff6ec7","#5ee6ff","#fff680","#a6f7b2","#c77dff","#7dd3fc"],
+  ["#ff9f00","#ff00a6","#00ffe1","#ffee00","#00d9ff","#ff6b6b"],
+  ["#ff5f6d","#ffc371","#00c9ff","#92fe9d","#a890fe","#fbc8d4"]
 ];
 
 const CARDS=[
@@ -169,36 +182,24 @@ function buildStripeBackground(colors){
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-/* Cached Sage TTS */
+/* Reliable Sage TTS (fetch fresh every time but keep short-term cache) */
+const ttsCache=new Map();
 async function speak(text){
   if(!text) return;
-  const key=`sage_${text}`;
-  const cached=localStorage.getItem(key);
   try{
-    let audio;
-    if(cached){
-      audio=new Audio(cached);
-    }else{
-      const url=`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`;
-      const res=await fetch(url);
-      const blob=await res.blob();
-      const reader=new FileReader();
-      reader.onloadend=()=>{
-        const dataUrl=reader.result;
-        try{localStorage.setItem(key,dataUrl);}catch(e){console.warn("Cache full or blocked:",e);}
-        const a=new Audio(dataUrl);
-        a.play().catch(console.warn);
-      };
-      reader.readAsDataURL(blob);
+    if(ttsCache.has(text)){
+      const a=new Audio(ttsCache.get(text));
+      a.play().catch(()=>setTimeout(()=>a.play(),200));
       return;
     }
-    await audio.play().catch(err=>{
-      console.warn("Playback blocked:",err);
-      setTimeout(()=>audio.play().catch(console.warn),300);
-    });
-  }catch(err){
-    console.error("Sage TTS error:",err);
-  }
+    const url=`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`;
+    const res=await fetch(url);
+    const blob=await res.blob();
+    const dataUrl=URL.createObjectURL(blob);
+    ttsCache.set(text,dataUrl);
+    const audio=new Audio(dataUrl);
+    await audio.play().catch(()=>setTimeout(()=>audio.play(),200));
+  }catch(err){console.error("Sage TTS error:",err);}
 }
 
 /* Show current card */
