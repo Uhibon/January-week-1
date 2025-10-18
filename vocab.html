@@ -173,30 +173,14 @@ function buildStripeBackground(colors){
 async function speak(text){
   if(!text) return;
   try{
-    const key = 'sage_' + encodeURIComponent(text);
-    let url = localStorage.getItem(key);
-
-    if(!url){
-      const res = await fetch(
-        `https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`,
-        { mode: 'cors' }
-      );
-      const data = await res.json();
-      url = data.url;
-      if(url) localStorage.setItem(key, url);
-    }
-
-    if(!url) return;
-
-    // ✅ play directly from data URL
+    const url = `https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`;
     const audio = new Audio(url);
-    await audio.play().catch(err => {
-      console.warn('Playback blocked:', err);
-      // small delay retry for Safari
-      setTimeout(() => audio.play().catch(console.warn), 300);
+    await audio.play().catch(err=>{
+      console.warn("Playback blocked:",err);
+      setTimeout(()=>audio.play().catch(console.warn),300);
     });
-  } catch (err) {
-    console.error('Sage TTS error:', err);
+  }catch(err){
+    console.error("Sage TTS error:",err);
   }
 }
 
