@@ -59,10 +59,13 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   transition:transform .7s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 30px 80px rgba(0,0,0,.3);
   border:3px solid rgba(255,255,255,.25);
-  background-size:400% 400%;
-  animation:bgmove 12s linear infinite;
+  background-size:200% 200%;
+  animation:stripemove 8s linear infinite;
 }
-@keyframes bgmove{0%{background-position:0 0;}100%{background-position:300% 300%;}}
+@keyframes stripemove {
+  0%{background-position:0 0;}
+  100%{background-position:0 100%;}
+}
 .card.is-back{transform:rotateY(180deg)}
 .face{
   position:absolute;inset:0;border-radius:var(--radius);
@@ -123,25 +126,25 @@ footer{
 
 <script>
 const CARDS=[
-  {en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff6ec7","#5ee6ff","#ffd166"]},
-  {en:"plan",jp:"計画",hira:"けいかく",stripes:["#5ee6ff","#ffd166","#c77dff"]},
-  {en:"future",jp:"未来",hira:"みらい",stripes:["#ffd166","#8aff80","#5ee6ff"]},
-  {en:"dream",jp:"夢",hira:"ゆめ",stripes:["#8aff80","#ff7eb9","#fff680"]},
-  {en:"challenge",jp:"挑戦",hira:"ちょうせん",stripes:["#ff7eb9","#5ee6ff","#ffd166"]},
-  {en:"try",jp:"挑戦する",hira:"ちょうせん する",stripes:["#ffd166","#8aff80","#c77dff"]},
-  {en:"change",jp:"変える",hira:"かえる",stripes:["#5ee6ff","#ffd166","#ff7eb9"]},
-  {en:"habit",jp:"習慣",hira:"しゅうかん",stripes:["#fff680","#5ee6ff","#8aff80"]},
-  {en:"exercise",jp:"運動",hira:"うんどう",stripes:["#8aff80","#ff7eb9","#ffd166"]},
-  {en:"study",jp:"勉強",hira:"べんきょう",stripes:["#ffd166","#5ee6ff","#c77dff"]},
-  {en:"learn",jp:"学ぶ",hira:"まなぶ",stripes:["#ff7eb9","#8aff80","#fff680"]},
-  {en:"practice",jp:"練習",hira:"れんしゅう",stripes:["#5ee6ff","#ffd166","#ff7eb9"]},
-  {en:"success",jp:"成功",hira:"せいこう",stripes:["#ffd166","#8aff80","#5ee6ff"]},
-  {en:"focus",jp:"集中",hira:"しゅうちゅう",stripes:["#8aff80","#ff7eb9","#ffd166"]},
-  {en:"motivation",jp:"やる気",hira:"やるき",stripes:["#5ee6ff","#fff680","#ff7eb9"]}
+  {en:"goal",jp:"目標",hira:"もくひょう",color:"#ff7eb9"},
+  {en:"plan",jp:"計画",hira:"けいかく",color:"#7dd3fc"},
+  {en:"future",jp:"未来",hira:"みらい",color:"#a6f7b2"},
+  {en:"dream",jp:"夢",hira:"ゆめ",color:"#ffd166"},
+  {en:"challenge",jp:"挑戦",hira:"ちょうせん",color:"#c77dff"},
+  {en:"try",jp:"挑戦する",hira:"ちょうせん する",color:"#ff9f9f"},
+  {en:"change",jp:"変える",hira:"かえる",color:"#7afcff"},
+  {en:"habit",jp:"習慣",hira:"しゅうかん",color:"#fff680"},
+  {en:"exercise",jp:"運動",hira:"うんどう",color:"#8aff80"},
+  {en:"study",jp:"勉強",hira:"べんきょう",color:"#ffb3ba"},
+  {en:"learn",jp:"学ぶ",hira:"まなぶ",color:"#bae1ff"},
+  {en:"practice",jp:"練習",hira:"れんしゅう",color:"#baffc9"},
+  {en:"success",jp:"成功",hira:"せいこう",color:"#ffd6a5"},
+  {en:"focus",jp:"集中",hira:"しゅうちゅう",color:"#e7baff"},
+  {en:"motivation",jp:"やる気",hira:"やるき",color:"#fdffb6"}
 ];
 
 // shuffle
-function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 shuffle(CARDS);
 
 let i=0,back=false;
@@ -150,39 +153,35 @@ const frontTitle=document.getElementById('frontTitle');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
 
-// --- CACHE & OPENAI SAGE VOICE ---
+// --- FIXED OPENAI SAGE VOICE with CACHE ---
 async function speak(text){
   try{
-    const cacheKey='tts_'+encodeURIComponent(text);
-    const cached=localStorage.getItem(cacheKey);
-    if(cached){
-      new Audio(cached).play();
-      return;
+    const key='sage_'+encodeURIComponent(text);
+    const cached=localStorage.getItem(key);
+    if(cached){ new Audio(cached).play(); return; }
+    const res=await fetch(`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`);
+    const data=await res.json();
+    if(data.url){
+      localStorage.setItem(key,data.url);
+      new Audio(data.url).play();
     }
-    const r=await fetch(`https://bryanharper.tokyo/_functions/tts?text=${encodeURIComponent(text)}&voice=sage`);
-    const d=await r.json();
-    if(d.url){
-      localStorage.setItem(cacheKey,d.url);
-      new Audio(d.url).play();
-    }
-  }catch(e){console.error(e);}
+  }catch(err){console.error('TTS error:',err);}
 }
 
 function show(){
   const c=CARDS[i];
-  card.style.background=`repeating-linear-gradient(45deg,
-    ${c.stripes[0]} 0%,
-    ${c.stripes[0]} 3%,
-    ${c.stripes[1]} 3%,
-    ${c.stripes[1]} 6%,
-    ${c.stripes[2]} 6%,
-    ${c.stripes[2]} 9%)`;
-  card.style.backgroundSize='400% 400%';
-  card.style.animation='bgmove 12s linear infinite';
+  card.style.background=`repeating-linear-gradient(
+    0deg,
+    ${c.color} 0%,
+    ${c.color} 5%,
+    #ffffff 5%,
+    #ffffff 10%)`;
+  card.style.backgroundSize='100% 200%';
+  card.style.animation='stripemove 6s linear infinite';
   frontTitle.textContent=c.en;
   backTitle.textContent=c.jp;
   backSub.textContent=c.hira;
-  card.classList.toggle('is-back', back);
+  card.classList.toggle('is-back',back);
 }
 
 document.getElementById('flipBtn').onclick=()=>{back=!back;show()};
