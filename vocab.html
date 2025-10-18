@@ -45,6 +45,7 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   border:3px solid rgba(255,255,255,.25);
   background-size:100% 240px;
   animation:stripeDown 6s linear infinite;
+  overflow:hidden;
 }
 @keyframes stripeDown{
   0%{background-position:0 0;}
@@ -61,18 +62,36 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 .face.back{transform:rotateY(180deg);}
 .term h2{
   margin:0;
-  font-size:clamp(48px,9vw,110px);
+  font-size:clamp(52px,10vw,120px);
   font-weight:900;
   line-height:1.1;
   color:#111;
-  text-shadow:0 0 12px rgba(255,255,255,.9),0 0 24px rgba(255,255,255,.7);
+  -webkit-text-stroke:1.5px #fff;
+  text-shadow:0 0 15px rgba(255,255,255,.9),0 0 35px rgba(255,255,255,.8);
 }
 .term p{
   margin-top:.7rem;
-  font-size:clamp(28px,5vw,46px);
+  font-size:clamp(30px,5.5vw,48px);
   font-weight:700;
   color:#111;
-  text-shadow:0 0 10px rgba(255,255,255,.9),0 0 18px rgba(255,255,255,.6);
+  -webkit-text-stroke:1px #fff;
+  text-shadow:0 0 12px rgba(255,255,255,.9),0 0 24px rgba(255,255,255,.7);
+}
+
+/* gold sparkles floating */
+.sparkle{
+  position:absolute;
+  width:4px;height:4px;
+  background:radial-gradient(circle,#ffd700 0%,transparent 70%);
+  border-radius:50%;
+  opacity:0.8;
+  animation:spark 6s linear infinite;
+  pointer-events:none;
+}
+@keyframes spark{
+  0%{transform:translateY(0) scale(1);opacity:.9;}
+  50%{opacity:.6;}
+  100%{transform:translateY(-600px) scale(0.5);opacity:0;}
 }
 
 .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
@@ -108,6 +127,8 @@ footer{
 
   <div class="card-outer">
     <article class="card" id="card">
+      <!-- sparkles -->
+      <div id="sparkleContainer"></div>
       <div class="face front">
         <div class="term">
           <h2 id="frontTitle"></h2>
@@ -133,8 +154,8 @@ footer{
   <footer>Bryan's English School</footer>
 
 <script>
-/* Full-color vivid stripe palettes */
-const PALETTES = [
+/* vivid palettes */
+const PALETTES=[
   ["#ff007f","#00c3ff","#ffe600","#39ff14","#8b00ff","#ff4d4d"],
   ["#ff4b1f","#1fddff","#f9ed69","#00ff9c","#d16ba5","#8ef6e4"],
   ["#ff6ec7","#5ee6ff","#fff680","#a6f7b2","#c77dff","#7dd3fc"],
@@ -160,7 +181,6 @@ const CARDS=[
   {en:"motivation",jp:"やる気",hira:"やるき"}
 ];
 
-/* Shuffle */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 shuffle(CARDS);
 
@@ -182,7 +202,7 @@ function buildStripeBackground(colors){
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-/* Reliable Sage TTS (fetch fresh every time but keep short-term cache) */
+/* Reliable Sage voice */
 const ttsCache=new Map();
 async function speak(text){
   if(!text) return;
@@ -197,12 +217,26 @@ async function speak(text){
     const blob=await res.blob();
     const dataUrl=URL.createObjectURL(blob);
     ttsCache.set(text,dataUrl);
-    const audio=new Audio(dataUrl);
-    await audio.play().catch(()=>setTimeout(()=>audio.play(),200));
-  }catch(err){console.error("Sage TTS error:",err);}
+    const a=new Audio(dataUrl);
+    a.play().catch(()=>setTimeout(()=>a.play(),200));
+  }catch(e){console.error("Sage TTS error:",e);}
 }
 
-/* Show current card */
+/* Sparkles */
+const sparkContainer=document.getElementById("sparkleContainer");
+function makeSparkles(){
+  for(let i=0;i<15;i++){
+    const s=document.createElement("div");
+    s.className="sparkle";
+    s.style.left=Math.random()*100+"%";
+    s.style.bottom=Math.random()*100+"%";
+    s.style.animationDelay=(Math.random()*6)+"s";
+    sparkContainer.appendChild(s);
+  }
+}
+makeSparkles();
+
+/* Show card */
 function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
