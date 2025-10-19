@@ -8,132 +8,85 @@
 <link rel="icon" type="image/png" href="booha-ghost.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet" />
 <style>
-:root {
-  --radius: 28px;
-  --bg: url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
+:root{
+  --radius:28px;
+  --bg:url('https://static.wixstatic.com/media/fa59b9_f8915cfdff974d7883c730f51f577d31~mv2.jpg');
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html,body {
-  height: 100%;
-  font-family: system-ui, Segoe UI, Roboto, Inter, sans-serif;
-  background: linear-gradient(160deg, rgba(124,58,237,.1), rgba(34,211,238,.1)), #0f172a;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: #111; position: relative; overflow: hidden;
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  height:100%;
+  font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
+  background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#111;position:relative;overflow:hidden;
 }
-body::before {
-  content: ""; position: fixed; inset: 0; z-index: -1;
-  background-image: var(--bg); background-size: cover; background-position: center; opacity: .25;
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background-image:var(--bg);background-size:cover;background-position:center;opacity:.25;
 }
-.back-btn {
-  position: fixed; top: 14px; left: 14px; z-index: 1000;
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .55rem .9rem; border-radius: 999px; background: #0b1020; color: #fff;
-  border: 1px solid rgba(255,255,255,.25); box-shadow: 0 10px 25px rgba(0,0,0,.35);
-  font-weight: 800; font-size: .95rem; text-decoration: none; -webkit-tap-highlight-color: transparent;
-}
-header { text-align: center; color: #fff; margin-bottom: 20px; }
-header h1 { font-family: 'Cinzel', serif; font-size: clamp(26px,4.5vw,50px); letter-spacing: 1px; margin-bottom: 10px; font-weight: 900; }
-header h2 { font-size: clamp(22px,3.5vw,36px); margin-bottom: 6px; font-weight: 800; }
-header h3 { font-size: clamp(18px,3vw,30px); font-weight: 600; color: #dbeafe; }
+header{text-align:center;color:#fff;margin-bottom:20px;}
+header h1{font-family:'Cinzel',serif;font-size:clamp(26px,4.5vw,50px);letter-spacing:1px;margin-bottom:10px;font-weight:900;}
+header h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:6px;font-weight:800;}
+header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 
-.card-outer {
-  width: min(92vw, 900px);
-  aspect-ratio: 3/2;
-  perspective: 1500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.card-outer{width:min(92vw,900px);aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;perspective:1000px;}
+.card{
+  width:100%;height:100%;border-radius:var(--radius);
+  border:3px solid rgba(255,255,255,.25);
+  box-shadow:0 30px 80px rgba(0,0,0,.3);
+  overflow:hidden;
+  background-size:100% 240px;
+  animation:stripeDown 6s linear infinite;
+  position:relative;
 }
-.card {
-  position: relative;
-  width: 100%; height: 100%;
-  border-radius: var(--radius);
-  transform-style: preserve-3d;
-  transition: transform .7s cubic-bezier(.2,.8,.2,1);
-  box-shadow: 0 30px 80px rgba(0,0,0,.3);
-  border: 3px solid rgba(255,255,255,.25);
-  background-size: 100% 240px;
-  animation: stripeDown 6s linear infinite;
-  overflow: hidden;
-}
-@keyframes stripeDown {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 240px; }
-}
-.card.is-back { transform: rotateY(180deg); }
+@keyframes stripeDown{0%{background-position:0 0;}100%{background-position:0 240px;}}
 
-.face {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; text-align: center; padding: 1rem;
-  border-radius: var(--radius);
-  backface-visibility: hidden; /* critical fix */
+.face{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border-radius:var(--radius);transition:opacity .5s ease,transform .6s ease;
 }
-.face.back {
-  transform: rotateY(180deg);
+.face.hidden{opacity:0;transform:scale(0.98);}
+.face.visible{opacity:1;transform:scale(1);}
+
+.term h2{
+  margin:0;font-size:clamp(52px,10vw,120px);font-weight:900;line-height:1.1;color:#000;
+  text-shadow:0 0 6px rgba(255,255,255,.9),0 0 18px rgba(255,255,255,.6);
+}
+.term p{
+  margin-top:.7rem;font-size:clamp(30px,5.5vw,48px);font-weight:700;color:#000;
+  text-shadow:0 0 4px rgba(255,255,255,.8),0 0 12px rgba(255,255,255,.5);
 }
 
-/* ✏️ Text styling */
-.term h2 {
-  margin: 0;
-  font-size: clamp(52px,10vw,120px);
-  font-weight: 900;
-  line-height: 1.1;
-  color: #000;
-  text-shadow: 0 0 6px rgba(255,255,255,.9), 0 0 18px rgba(255,255,255,.6);
+/* sparkles */
+.sparkle{
+  position:absolute;width:6px;height:6px;
+  background:radial-gradient(circle at center,#fff8b0 0%,#ffd700 40%,transparent 70%);
+  border-radius:50%;opacity:.95;pointer-events:none;z-index:2;
+  animation:sparkleFloat 2.2s ease-out forwards;filter:blur(.5px);
 }
-.term p {
-  margin-top: .7rem;
-  font-size: clamp(30px,5.5vw,48px);
-  font-weight: 700;
-  color: #000;
-  text-shadow: 0 0 4px rgba(255,255,255,.8), 0 0 12px rgba(255,255,255,.5);
-}
+@keyframes sparkleFloat{0%{transform:translateY(0) scale(1);opacity:1;}60%{opacity:.9;}100%{transform:translateY(-200px) scale(.5);opacity:0;}}
 
-/* ✨ Sparkles */
-.sparkle {
-  position: absolute;
-  width: 6px; height: 6px;
-  background: radial-gradient(circle at center,#fff8b0 0%,#ffd700 40%,transparent 70%);
-  border-radius: 50%;
-  opacity: 0.95;
-  pointer-events: none;
-  z-index: 2;
-  animation: sparkleFloat 2.2s ease-out forwards;
-  filter: blur(0.5px);
+.actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
+button.btn{
+  padding:1rem 1.3rem;border-radius:16px;border:none;background:linear-gradient(180deg,#fff,#e0e0e0);
+  box-shadow:0 10px 25px rgba(0,0,0,.15);font-weight:800;cursor:pointer;font-size:1.1rem;
 }
-@keyframes sparkleFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  60% { opacity: .9; }
-  100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+#speakBtn{
+  background:linear-gradient(180deg,#ff4444,#cc0000);color:#fff;
+  font-size:1.3rem;line-height:1;
+  padding:1rem 1.5rem;border:none;border-radius:16px;
+  box-shadow:0 0 20px rgba(255,0,0,.4);
+  transition:transform .15s;
 }
-
-.actions { display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
-button.btn {
-  padding: 1rem 1.3rem; border-radius: 16px; border: none;
-  background: linear-gradient(180deg,#fff,#e0e0e0);
-  box-shadow: 0 10px 25px rgba(0,0,0,.15);
-  font-weight: 800; cursor: pointer; font-size: 1.1rem;
-}
-#speakBtn {
-  background: linear-gradient(180deg,#ff4444,#cc0000); color: #fff;
-  font-size: 1.3rem; line-height: 1;
-  padding: 1rem 1.5rem; border: none; border-radius: 16px;
-  box-shadow: 0 0 20px rgba(255,0,0,.4);
-  transition: transform .15s;
-}
-#speakBtn:hover { transform: scale(1.1); }
-
-footer {
-  position: fixed; bottom: 18px; left: 0; width: 100%;
-  text-align: center; color: #d1d5db; font-family: 'Cinzel', serif;
-  font-size: clamp(14px,2vw,18px); letter-spacing: 1px; opacity: .9;
+#speakBtn:hover{transform:scale(1.1);}
+footer{
+  position:fixed;bottom:18px;left:0;width:100%;
+  text-align:center;color:#d1d5db;font-family:'Cinzel',serif;
+  font-size:clamp(14px,2vw,18px);letter-spacing:1px;opacity:.9;
 }
 </style>
 </head>
 <body>
-<a href="#" class="back-btn" id="backMenu"><span class="arrow">❮</span> Back to Menu</a>
-
 <header>
   <h1>The Boo-riculum</h1>
   <h2>January Week 1</h2>
@@ -141,22 +94,15 @@ footer {
 </header>
 
 <div class="card-outer">
-  <article class="card" id="card">
+  <div class="card" id="card">
     <div id="sparkleContainer"></div>
-
-    <div class="face front">
-      <div class="term">
-        <h2 id="frontTitle"></h2>
-      </div>
+    <div class="face visible" id="frontFace">
+      <div class="term"><h2 id="frontTitle"></h2></div>
     </div>
-
-    <div class="face back">
-      <div class="term">
-        <h2 id="backTitle"></h2>
-        <p id="backSub"></p>
-      </div>
+    <div class="face hidden" id="backFace">
+      <div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div>
     </div>
-  </article>
+  </div>
 </div>
 
 <div class="actions">
@@ -176,7 +122,6 @@ const PALETTES=[
   ["#ff9f00","#ff00a6","#00ffe1","#ffee00","#00d9ff","#ff6b6b"],
   ["#ff5f6d","#ffc371","#00c9ff","#92fe9d","#a890fe","#fbc8d4"]
 ];
-
 const CARDS=[
   {en:"goal",jp:"目標",hira:"もくひょう"},
   {en:"plan",jp:"計画",hira:"けいかく"},
@@ -198,31 +143,22 @@ const CARDS=[
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 shuffle(CARDS);
 
-let i=0, back=false;
+let i=0,showBack=false;
 const card=document.getElementById('card');
+const frontFace=document.getElementById('frontFace');
+const backFace=document.getElementById('backFace');
 const frontTitle=document.getElementById('frontTitle');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
+const sparkContainer=document.getElementById("sparkleContainer");
 
 function buildStripeBackground(colors){
-  const band=40; let stops=[];
-  colors.forEach((c,idx)=>{
-    const start=idx*band;
-    stops.push(`${c} ${start}px ${start+band}px`);
-  });
-  const all=stops.concat(stops.map(s=>s.replace(/(\d+)px/g,(m,n)=>(parseInt(n)+band*colors.length)+'px')));
+  const band=40;let stops=[];
+  colors.forEach((c,idx)=>{const start=idx*band;stops.push(`${c} ${start}px ${start+band}px`);});
+  const all=stops.concat(stops.map(s=>s.replace(/(\d+)px/g,(m,n)=>(+n+band*colors.length)+'px')));
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-function speak(text){
-  if(!text) return;
-  const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
-  const path=`audio/${filename}`;
-  const a=new Audio(path);
-  a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
-}
-
-const sparkContainer=document.getElementById("sparkleContainer");
 function triggerSparkles(){
   for(let n=0;n<35;n++){
     const s=document.createElement("div");
@@ -236,6 +172,14 @@ function triggerSparkles(){
   }
 }
 
+function speak(text){
+  if(!text)return;
+  const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
+  const path=`audio/${filename}`;
+  const a=new Audio(path);
+  a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
+}
+
 function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
@@ -243,14 +187,19 @@ function show(){
   frontTitle.textContent=c.en;
   backTitle.textContent=c.jp;
   backSub.textContent=c.hira;
-  card.classList.toggle('is-back',back);
+  if(showBack){
+    frontFace.classList.replace("visible","hidden");
+    backFace.classList.replace("hidden","visible");
+  }else{
+    backFace.classList.replace("visible","hidden");
+    frontFace.classList.replace("hidden","visible");
+  }
 }
 
-document.getElementById('flipBtn').onclick=()=>{back=!back;show();};
-document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show();};
-document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show();};
-document.getElementById('speakBtn').onclick=()=>{const c=CARDS[i];speak(back?c.jp:c.en);};
-document.getElementById('backMenu').onclick=(e)=>{e.preventDefault();if(document.referrer)history.back();else location.href='index.html';};
+document.getElementById('flipBtn').onclick=()=>{showBack=!showBack;show();};
+document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;showBack=false;show();};
+document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;showBack=false;show();};
+document.getElementById('speakBtn').onclick=()=>{const c=CARDS[i];speak(showBack?c.jp:c.en);};
 
 show();
 </script>
