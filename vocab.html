@@ -62,23 +62,25 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 }
 .face.back{transform:rotateY(180deg);}
 
-/* ✏️ Black text with white glow + subtle outline */
+/* ✏️ Clean black text with soft white glow */
 .term h2{
   margin:0;
   font-size:clamp(52px,10vw,120px);
   font-weight:900;
   line-height:1.1;
   color:#000;
-  -webkit-text-stroke:1px #fff;
-  text-shadow:0 0 10px rgba(255,255,255,.7), 0 0 25px rgba(255,255,255,.6);
+  text-shadow:
+    0 0 6px rgba(255,255,255,.9),
+    0 0 18px rgba(255,255,255,.6);
 }
 .term p{
   margin-top:.7rem;
   font-size:clamp(30px,5.5vw,48px);
   font-weight:700;
   color:#000;
-  -webkit-text-stroke:0.5px #fff;
-  text-shadow:0 0 8px rgba(255,255,255,.7), 0 0 18px rgba(255,255,255,.5);
+  text-shadow:
+    0 0 4px rgba(255,255,255,.8),
+    0 0 12px rgba(255,255,255,.5);
 }
 
 /* ✨ gold shimmer sparkles (behind text) */
@@ -87,16 +89,16 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   width:6px; height:6px;
   background:radial-gradient(circle at center,#fff8b0 0%,#ffd700 40%,transparent 70%);
   border-radius:50%;
-  opacity:0.9;
+  opacity:0.95;
   pointer-events:none;
   z-index:2;
-  animation:sparkleFloat 1.8s ease-out forwards;
-  filter:blur(0.4px);
+  animation:sparkleFloat 2.2s ease-out forwards;
+  filter:blur(0.5px);
 }
 @keyframes sparkleFloat {
   0%   {transform:translateY(0) scale(1); opacity:1;}
-  60%  {opacity:.85;}
-  100% {transform:translateY(-160px) scale(0.4); opacity:0;}
+  60%  {opacity:.9;}
+  100% {transform:translateY(-200px) scale(0.5); opacity:0;}
 }
 
 .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
@@ -211,28 +213,24 @@ function speak(text){
   if(!text) return;
   const filename=text.toLowerCase().replace(/[^a-z0-9]/g,"")+".mp3";
   const path=`audio/${filename}`;
-  console.log("▶️ Playing:", path);
   const a=new Audio(path);
   a.play().then(()=>{
     triggerSparkles();
-  }).catch(err=>{
-    console.warn("Playback failed:", err);
-    setTimeout(()=>a.play().catch(e=>console.error("Retry failed:",e)),400);
-  });
+  }).catch(()=>setTimeout(()=>a.play(),400));
 }
 
 /* ✨ Sparkles appear when Sage speaks */
 const sparkContainer=document.getElementById("sparkleContainer");
 function triggerSparkles(){
-  for(let n=0;n<24;n++){
+  for(let n=0;n<35;n++){
     const s=document.createElement("div");
     s.className="sparkle";
     s.style.left=Math.random()*100+"%";
     s.style.bottom=Math.random()*60+"%";
-    s.style.transform=`scale(${0.7+Math.random()*1.3})`;
+    s.style.transform=`scale(${0.6+Math.random()*1.4})`;
     s.style.animationDelay=(Math.random()*0.3)+"s";
     sparkContainer.appendChild(s);
-    setTimeout(()=>s.remove(),1800);
+    setTimeout(()=>s.remove(),2200);
   }
 }
 
