@@ -18,7 +18,7 @@ html,body{
   font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
   background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  color:#111; position:relative; overflow:hidden;
+  color:#fff; position:relative; overflow:hidden;
 }
 body::before{
   content:""; position:fixed; inset:0; z-index:-1;
@@ -46,6 +46,7 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   background-size:100% 240px;
   animation:stripeDown 6s linear infinite;
   overflow:hidden;
+  z-index:1;
 }
 @keyframes stripeDown{
   0%{background-position:0 0;}
@@ -57,7 +58,7 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   backface-visibility:hidden;
   display:flex; align-items:center; justify-content:center;
   flex-direction:column; text-align:center; padding:1rem;
-  background:transparent;
+  background:transparent; z-index:3;
 }
 .face.back{transform:rotateY(180deg);}
 .term h2{
@@ -65,33 +66,37 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   font-size:clamp(52px,10vw,120px);
   font-weight:900;
   line-height:1.1;
-  color:#111;
-  -webkit-text-stroke:1.5px #fff;
-  text-shadow:0 0 15px rgba(255,255,255,.9),0 0 35px rgba(255,255,255,.8);
+  color:#fff;
+  text-shadow:0 0 12px rgba(255,255,255,.7),
+               0 0 28px rgba(255,255,255,.5);
+  -webkit-text-stroke:0 transparent;
 }
 .term p{
   margin-top:.7rem;
   font-size:clamp(30px,5.5vw,48px);
   font-weight:700;
-  color:#111;
-  -webkit-text-stroke:1px #fff;
-  text-shadow:0 0 12px rgba(255,255,255,.9),0 0 24px rgba(255,255,255,.7);
+  color:#fefefe;
+  text-shadow:0 0 10px rgba(255,255,255,.6),
+               0 0 20px rgba(255,255,255,.4);
+  -webkit-text-stroke:0 transparent;
 }
 
-/* ✨ sparkles appear briefly behind card */
-.sparkle{
+/* ✨ gold shimmer sparkles (behind text) */
+.sparkle {
   position:absolute;
-  width:4px;height:4px;
-  background:radial-gradient(circle,#ffd700 0%,transparent 70%);
+  width:6px; height:6px;
+  background:radial-gradient(circle at center,#fff8b0 0%,#ffd700 40%,transparent 70%);
   border-radius:50%;
-  opacity:0.8;
-  animation:spark 1.8s ease-out forwards;
+  opacity:0.9;
   pointer-events:none;
+  z-index:2; /* behind text but above background */
+  animation:sparkleFloat 1.8s ease-out forwards;
+  filter:blur(0.5px);
 }
-@keyframes spark{
-  0%{transform:translateY(0) scale(1);opacity:1;}
-  70%{opacity:.8;}
-  100%{transform:translateY(-180px) scale(0.3);opacity:0;}
+@keyframes sparkleFloat {
+  0%   {transform:translateY(0) scale(1); opacity:1;}
+  60%  {opacity:.8;}
+  100% {transform:translateY(-160px) scale(0.4); opacity:0;}
 }
 
 .actions{display:flex;gap:20px;justify-content:center;margin-top:30px;flex-wrap:wrap;}
@@ -219,14 +224,13 @@ function speak(text){
 /* ✨ Sparkles appear when Sage speaks */
 const sparkContainer=document.getElementById("sparkleContainer");
 function triggerSparkles(){
-  sparkContainer.innerHTML="";
-  for(let n=0;n<20;n++){
+  for(let n=0;n<24;n++){
     const s=document.createElement("div");
     s.className="sparkle";
     s.style.left=Math.random()*100+"%";
     s.style.bottom=Math.random()*60+"%";
     s.style.transform=`scale(${0.7+Math.random()*1.3})`;
-    s.style.animationDelay=(Math.random()*0.5)+"s";
+    s.style.animationDelay=(Math.random()*0.3)+"s";
     sparkContainer.appendChild(s);
     setTimeout(()=>s.remove(),1800);
   }
