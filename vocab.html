@@ -211,7 +211,7 @@ function buildStripeBackground(colors){
 /* ✅ Local Sage audio from /audio/ folder */
 function speak(text){
   if(!text) return;
-  const filename=text.toLowerCase().replace(/[^a-z0-9]/g,"")+".mp3";
+  const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
   const path=`audio/${filename}`;
   const a=new Audio(path);
   a.play().then(()=>{
