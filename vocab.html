@@ -39,7 +39,8 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 .card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
 .card{
   position:relative; width:100%; height:100%;
-  border-radius:var(--radius); transform-style:preserve-3d;
+  border-radius:var(--radius);
+  transform-style:preserve-3d;
   transition:transform .7s cubic-bezier(.2,.8,.2,1);
   box-shadow:0 30px 80px rgba(0,0,0,.3);
   border:3px solid rgba(255,255,255,.25);
@@ -60,10 +61,10 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   backface-visibility:hidden;
 }
 .face.back{
-  transform:rotateY(180deg) scaleX(-1); /* ✅ fixes mirrored text */
+  transform:rotateY(180deg);
 }
 
-/* ✏️ Clean black text with soft white glow */
+/* ✏️ Text styling */
 .term h2{
   margin:0;
   font-size:clamp(52px,10vw,120px);
@@ -231,12 +232,9 @@ function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
   card.style.backgroundImage=buildStripeBackground(palette);
-  if(back){
-    backTitle.textContent=c.jp;
-    backSub.textContent=c.hira;
-  } else {
-    frontTitle.textContent=c.en;
-  }
+  frontTitle.textContent=c.en;
+  backTitle.textContent=c.jp;
+  backSub.textContent=c.hira;
   card.classList.toggle('is-back',back);
 }
 
