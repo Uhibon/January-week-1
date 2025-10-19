@@ -46,7 +46,6 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   background-size:100% 240px;
   animation:stripeDown 6s linear infinite;
   overflow:hidden;
-  z-index:1;
 }
 @keyframes stripeDown{
   0%{background-position:0 0;}
@@ -55,12 +54,15 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 .card.is-back{transform:rotateY(180deg);}
 .face{
   position:absolute; inset:0; border-radius:var(--radius);
-  backface-visibility:hidden;
   display:flex; align-items:center; justify-content:center;
   flex-direction:column; text-align:center; padding:1rem;
   background:transparent; z-index:3;
+  backface-visibility:hidden;
 }
-.face.back{transform:rotateY(180deg);}
+.face.back{
+  transform:rotateY(180deg);
+  backface-visibility:hidden;
+}
 
 /* ✏️ Clean black text with soft white glow */
 .term h2{
@@ -214,9 +216,7 @@ function speak(text){
   const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
   const path=`audio/${filename}`;
   const a=new Audio(path);
-  a.play().then(()=>{
-    triggerSparkles();
-  }).catch(()=>setTimeout(()=>a.play(),400));
+  a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
 }
 
 /* ✨ Sparkles appear when Sage speaks */
@@ -243,7 +243,7 @@ function show(){
   frontSub.textContent=c.hira;
   backTitle.textContent=c.jp;
   backSub.textContent=c.hira;
-  card.classList.toggle('is-back',back);
+  if(back){ card.classList.add('is-back'); } else { card.classList.remove('is-back'); }
 }
 
 /* Controls */
