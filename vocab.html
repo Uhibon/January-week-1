@@ -36,9 +36,17 @@ header h1{font-family:'Cinzel',serif;font-size:clamp(26px,4.5vw,50px);letter-spa
 header h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:6px;font-weight:800;}
 header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
 
-.card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;align-items:center;justify-content:center;}
+.card-outer{
+  width:min(92vw,900px);
+  aspect-ratio:3/2;
+  perspective:1500px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 .card{
-  position:relative; width:100%; height:100%;
+  position:relative;
+  width:100%; height:100%;
   border-radius:var(--radius);
   transform-style:preserve-3d;
   transition:transform .7s cubic-bezier(.2,.8,.2,1);
@@ -53,12 +61,16 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   100%{background-position:0 240px;}
 }
 .card.is-back{transform:rotateY(180deg);}
+
 .face{
-  position:absolute; inset:0; border-radius:var(--radius);
+  position:absolute; inset:0;
+  border-radius:var(--radius);
   display:flex; align-items:center; justify-content:center;
   flex-direction:column; text-align:center; padding:1rem;
-  background:transparent; z-index:3;
   backface-visibility:hidden;
+}
+.face.front{
+  transform:rotateY(0deg);
 }
 .face.back{
   transform:rotateY(180deg);
@@ -137,11 +149,13 @@ footer{
 <div class="card-outer">
   <article class="card" id="card">
     <div id="sparkleContainer"></div>
+
     <div class="face front">
       <div class="term">
         <h2 id="frontTitle"></h2>
       </div>
     </div>
+
     <div class="face back">
       <div class="term">
         <h2 id="backTitle"></h2>
