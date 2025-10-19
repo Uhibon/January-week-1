@@ -18,7 +18,7 @@ html,body{
   font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;
   background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(34,211,238,.1)),#0f172a;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  color:#fff; position:relative; overflow:hidden;
+  color:#111; position:relative; overflow:hidden;
 }
 body::before{
   content:""; position:fixed; inset:0; z-index:-1;
@@ -61,24 +61,24 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   background:transparent; z-index:3;
 }
 .face.back{transform:rotateY(180deg);}
+
+/* ✏️ Black text with white glow + subtle outline */
 .term h2{
   margin:0;
   font-size:clamp(52px,10vw,120px);
   font-weight:900;
   line-height:1.1;
-  color:#fff;
-  text-shadow:0 0 12px rgba(255,255,255,.7),
-               0 0 28px rgba(255,255,255,.5);
-  -webkit-text-stroke:0 transparent;
+  color:#000;
+  -webkit-text-stroke:1px #fff;
+  text-shadow:0 0 10px rgba(255,255,255,.7), 0 0 25px rgba(255,255,255,.6);
 }
 .term p{
   margin-top:.7rem;
   font-size:clamp(30px,5.5vw,48px);
   font-weight:700;
-  color:#fefefe;
-  text-shadow:0 0 10px rgba(255,255,255,.6),
-               0 0 20px rgba(255,255,255,.4);
-  -webkit-text-stroke:0 transparent;
+  color:#000;
+  -webkit-text-stroke:0.5px #fff;
+  text-shadow:0 0 8px rgba(255,255,255,.7), 0 0 18px rgba(255,255,255,.5);
 }
 
 /* ✨ gold shimmer sparkles (behind text) */
@@ -89,13 +89,13 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   border-radius:50%;
   opacity:0.9;
   pointer-events:none;
-  z-index:2; /* behind text but above background */
+  z-index:2;
   animation:sparkleFloat 1.8s ease-out forwards;
-  filter:blur(0.5px);
+  filter:blur(0.4px);
 }
 @keyframes sparkleFloat {
   0%   {transform:translateY(0) scale(1); opacity:1;}
-  60%  {opacity:.8;}
+  60%  {opacity:.85;}
   100% {transform:translateY(-160px) scale(0.4); opacity:0;}
 }
 
