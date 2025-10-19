@@ -140,7 +140,6 @@ footer{
     <div class="face front">
       <div class="term">
         <h2 id="frontTitle"></h2>
-        <p id="frontSub"></p>
       </div>
     </div>
     <div class="face back">
@@ -195,7 +194,6 @@ shuffle(CARDS);
 let i=0, back=false;
 const card=document.getElementById('card');
 const frontTitle=document.getElementById('frontTitle');
-const frontSub=document.getElementById('frontSub');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
 
@@ -239,10 +237,12 @@ function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
   card.style.backgroundImage=buildStripeBackground(palette);
-  frontTitle.textContent=c.en;
-  frontSub.textContent=c.hira;
-  backTitle.textContent=c.jp;
-  backSub.textContent=c.hira;
+  if(back){
+    backTitle.textContent=c.jp;
+    backSub.textContent=c.hira;
+  } else {
+    frontTitle.textContent=c.en;
+  }
   if(back){ card.classList.add('is-back'); } else { card.classList.remove('is-back'); }
 }
 
