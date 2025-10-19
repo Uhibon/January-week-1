@@ -60,8 +60,7 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
   backface-visibility:hidden;
 }
 .face.back{
-  transform:rotateY(180deg);
-  backface-visibility:hidden;
+  transform:rotateY(180deg) scaleX(-1); /* ✅ fixes mirrored text */
 }
 
 /* ✏️ Clean black text with soft white glow */
@@ -85,7 +84,7 @@ header h3{font-size:clamp(18px,3vw,30px);font-weight:600;color:#dbeafe;}
     0 0 12px rgba(255,255,255,.5);
 }
 
-/* ✨ gold shimmer sparkles (behind text) */
+/* ✨ gold shimmer sparkles */
 .sparkle {
   position:absolute;
   width:6px; height:6px;
@@ -161,7 +160,6 @@ footer{
 <footer>Bryan's English School</footer>
 
 <script>
-/* vivid palettes */
 const PALETTES=[
   ["#ff007f","#00c3ff","#ffe600","#39ff14","#8b00ff","#ff4d4d"],
   ["#ff4b1f","#1fddff","#f9ed69","#00ff9c","#d16ba5","#8ef6e4"],
@@ -197,7 +195,6 @@ const frontTitle=document.getElementById('frontTitle');
 const backTitle=document.getElementById('backTitle');
 const backSub=document.getElementById('backSub');
 
-/* Stripe builder */
 function buildStripeBackground(colors){
   const band=40; let stops=[];
   colors.forEach((c,idx)=>{
@@ -208,7 +205,6 @@ function buildStripeBackground(colors){
   return `repeating-linear-gradient(180deg,${all.join(',')})`;
 }
 
-/* ✅ Local Sage audio from /audio/ folder */
 function speak(text){
   if(!text) return;
   const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
@@ -217,7 +213,6 @@ function speak(text){
   a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
 }
 
-/* ✨ Sparkles appear when Sage speaks */
 const sparkContainer=document.getElementById("sparkleContainer");
 function triggerSparkles(){
   for(let n=0;n<35;n++){
@@ -232,7 +227,6 @@ function triggerSparkles(){
   }
 }
 
-/* Show card */
 function show(){
   const c=CARDS[i];
   const palette=PALETTES[i%PALETTES.length];
@@ -243,10 +237,9 @@ function show(){
   } else {
     frontTitle.textContent=c.en;
   }
-  if(back){ card.classList.add('is-back'); } else { card.classList.remove('is-back'); }
+  card.classList.toggle('is-back',back);
 }
 
-/* Controls */
 document.getElementById('flipBtn').onclick=()=>{back=!back;show();};
 document.getElementById('nextBtn').onclick=()=>{i=(i+1)%CARDS.length;back=false;show();};
 document.getElementById('prevBtn').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;back=false;show();};
