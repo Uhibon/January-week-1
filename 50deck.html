@@ -16,83 +16,144 @@
 }
 /* base */
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:radial-gradient(1200px 800px at 50% -10%,#1e2a55 0%,#0f1a3d 40%,#0b1530 100%);
-color:#fff;font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;overflow-x:hidden;}
+html,body{
+  height:100%;
+  background:radial-gradient(1200px 800px at 50% -10%,#1e2a55 0%,#0f1a3d 40%,#0b1530 100%);
+  color:#fff;font-family:system-ui,Segoe UI,Roboto,Inter,sans-serif;overflow-x:hidden;
+}
 .wrapper{min-height:100%;display:flex;flex-direction:column;align-items:center;gap:12px;
 justify-content:flex-start;padding:56px 10px 84px;}
-/* header */
+/* header + back */
 header{text-align:center;line-height:1.15}
 header .line1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(30px,5.2vw,62px)}
 header .line2{margin-top:6px;font-weight:900;font-size:clamp(18px,3.6vw,30px)}
 header .line3{margin-top:2px;font-weight:800;font-size:clamp(18px,3.6vw,28px);opacity:.95}
 .back{position:fixed;left:10px;top:10px;z-index:1000;padding:10px 14px;border-radius:999px;
 border:1px solid #2f3b7a;background:#0c1440;color:#fff;font-weight:800;text-decoration:none;
-box-shadow:0 0 18px rgba(124,58,237,.15);transition:transform .15s ease}
+box-shadow:0 0 18px rgba(124,58,237,.25);transition:transform .15s ease}
 .back:hover{transform:translateY(-1px)}
 .back:active{transform:scale(.97)}
-/* tabs */
+
+/* modes (glowing ①②③④) */
 .modes{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:14px 0 8px}
-.modes button{background:#0d1b4a;border:1px solid #2b3f8a;border-radius:14px;color:#e6e9ff;
-font-weight:900;padding:12px 16px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.35);
-transition:transform .12s ease; font-size:clamp(14px,2.6vw,18px)}
-.modes button:hover{transform:translateY(-1px)}
-.modes button.active[data-num="1"]{background:var(--pink);color:#3a0630}
-.modes button.active[data-num="2"]{background:var(--green);color:#062614}
-.modes button.active[data-num="3"]{background:var(--yellow);color:#3a3206}
-.modes button.active[data-num="4"]{background:var(--purple);color:#1f0b2c}
-/* card */
+.modes .tab{
+  position:relative;
+  background:#0d1b4a;border:1px solid #2b3f8a;border-radius:14px;color:#e6e9ff;
+  font-weight:900;padding:12px 16px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.35);
+  transition:transform .12s ease; font-size:clamp(14px,2.6vw,18px)
+}
+.modes .tab:hover{transform:translateY(-1px)}
+/* active fill colors */
+.modes .tab.active[data-num="1"]{background:var(--pink);color:#3a0630}
+.modes .tab.active[data-num="2"]{background:var(--green);color:#062614}
+.modes .tab.active[data-num="3"]{background:var(--yellow);color:#3a3206}
+.modes .tab.active[data-num="4"]{background:var(--purple);color:#1f0b2c}
+/* glow rings */
+@keyframes pulseGlow{0%{box-shadow:0 0 0px rgba(255,255,255,0.0);}
+50%{box-shadow:0 0 18px var(--glow);}
+100%{box-shadow:0 0 0px rgba(255,255,255,0.0);}}
+.modes .tab[data-num="1"]{--glow:#ff7eb980; animation:pulseGlow 1.8s ease-in-out infinite}
+.modes .tab[data-num="2"]{--glow:#8aff8080; animation:pulseGlow 1.9s ease-in-out infinite}
+.modes .tab[data-num="3"]{--glow:#fff68080; animation:pulseGlow 2.0s ease-in-out infinite}
+.modes .tab[data-num="4"]{--glow:#c77dff80; animation:pulseGlow 2.1s ease-in-out infinite}
+
+/* stage + card: match perfect vocab/sentences (no 3D mirror) */
 .stage{display:flex;flex-direction:column;align-items:center;gap:18px;padding:6px 12px;width:100%}
-.card-outer{width:min(92vw,900px);aspect-ratio:3/2;perspective:1500px;display:flex;
-align-items:center;justify-content:center;position:relative}
-.card{width:100%;height:100%;border-radius:var(--radius);border:3px solid rgba(255,255,255,.18);
-box-shadow:0 35px 90px rgba(0,0,0,.55);transform-style:preserve-3d;
-transition:transform .7s cubic-bezier(.2,.8,.2,1);overflow:hidden;
-background-size:100% 240px;animation:stripeDown 6s linear infinite}
+.card-outer{width:min(92vw,900px);aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;position:relative}
+.card{
+  width:100%;height:100%;border-radius:var(--radius);
+  border:3px solid rgba(255,255,255,.18);
+  box-shadow:0 35px 90px rgba(0,0,0,.55);
+  overflow:hidden;
+  background-size:100% 240px;animation:stripeDown 6s linear infinite;position:relative;
+}
 @keyframes stripeDown{0%{background-position:0 0}100%{background-position:0 240px}}
-.card.is-back{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-justify-content:center;text-align:center;border-radius:var(--radius);backface-visibility:hidden}
-.face.back{transform:rotateY(180deg)}
-.term h2{font-size:clamp(36px,6vw,68px);font-weight:900;color:#000;
-text-shadow:0 0 6px rgba(255,255,255,.9),0 0 18px rgba(255,255,255,.6)}
-.term p{margin-top:.7rem;font-size:clamp(20px,3.2vw,34px);color:#000;
-text-shadow:0 0 4px rgba(255,255,255,.8),0 0 12px rgba(255,255,255,.5)}
-/* sparkles */
-.sparkle{position:absolute;width:6px;height:6px;border-radius:50%;
-background:radial-gradient(circle,#fff8b0 0%,#ffd700 40%,transparent 70%);
-opacity:.95;pointer-events:none;animation:sparkleFloat 2.3s ease-out forwards;filter:blur(.5px)}
+.face{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  border-radius:var(--radius);transition:opacity .5s ease,transform .6s ease;
+}
+.face.hidden{opacity:0;transform:scale(0.98)}
+.face.visible{opacity:1;transform:scale(1)}
+/* clean black text w/ soft white glow */
+.term h2{
+  font-size:clamp(36px,6vw,68px);font-weight:900;color:#000;line-height:1.15;
+  text-shadow:0 0 6px rgba(255,255,255,.9),0 0 18px rgba(255,255,255,.6)
+}
+.term p{
+  margin-top:.7rem;font-size:clamp(20px,3.2vw,34px);color:#000;
+  text-shadow:0 0 4px rgba(255,255,255,.8),0 0 12px rgba(255,255,255,.5)
+}
+
+/* sparkles (Sage voice) */
+.sparkle{
+  position:absolute;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle,#fff8b0 0%,#ffd700 40%,transparent 70%);
+  opacity:.95;pointer-events:none;animation:sparkleFloat 2.3s ease-out forwards;filter:blur(.5px)
+}
 @keyframes sparkleFloat{0%{transform:translateY(0) scale(1);opacity:1;}
 60%{opacity:.9;}100%{transform:translateY(-200px) scale(.5);opacity:0}}
+
 /* controls */
 .controls{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn{padding:14px 18px;border-radius:16px;border:1px solid #e5e7eb;background:linear-gradient(180deg,#fff,#eaeaea);
-font-weight:900;color:#111;cursor:pointer;font-size:clamp(16px,3.2vw,20px);
-box-shadow:0 12px 28px rgba(0,0,0,.28);transition:transform .12s ease}
+.btn{
+  padding:14px 18px;border-radius:16px;border:1px solid #e5e7eb;background:linear-gradient(180deg,#fff,#eaeaea);
+  font-weight:900;color:#111;cursor:pointer;font-size:clamp(16px,3.2vw,20px);
+  box-shadow:0 12px 28px rgba(0,0,0,.28);transition:transform .12s ease
+}
 .btn:hover{transform:translateY(-1px)}
-#speakBtn{background:linear-gradient(180deg,#ff4444,#cc0000);color:#fff;border:none;
-box-shadow:0 0 22px rgba(255,0,0,.35);font-size:clamp(20px,4vw,24px)}
+#speakBtn{
+  background:linear-gradient(180deg,#ff4444,#cc0000);color:#fff;border:none;
+  box-shadow:0 0 22px rgba(255,0,0,.35);font-size:clamp(20px,4vw,24px)
+}
+
 /* quiz */
 .quiz-wrap{width:min(94vw,900px);background:#0b1030;border:1px solid #2a3575;border-radius:18px;
-padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.45);position:relative;overflow:hidden}
 .qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .qprog,.score{font-weight:900;font-size:clamp(16px,2.8vw,20px)}
 .q{background:#0f1544;border:1px solid #2a3575;border-radius:14px;padding:18px}
 .q h3{font-size:clamp(24px,4vw,36px);margin-bottom:12px}
 .opts{display:grid;gap:14px;margin:14px 0}
-.opt{background:#0d133a;border:2px solid #2a3575;border-radius:14px;padding:18px;
-color:#e9ecff;font-weight:900;font-size:clamp(18px,3.2vw,26px);cursor:pointer;
-transition:transform .08s ease;background-clip:padding-box}
+.opt{
+  background:#0d133a;border:2px solid #2a3575;border-radius:14px;padding:18px;
+  color:#e9ecff;font-weight:900;font-size:clamp(18px,3.2vw,26px);cursor:pointer;
+  transition:transform .08s ease, box-shadow .15s ease; background-clip:padding-box
+}
 .opt:hover{transform:translateY(-1px)}
 .opt.correct{border-color:#22c55e;background:#0f2a1a}
 .opt.wrong{border-color:#ef4444;background:#2a1111}
 .explain{margin-top:12px;color:#d7ddff;font-size:clamp(14px,2.4vw,18px)}
 .hidden{display:none}
+
+/* quiz nav: smaller Next on right */
+.qnav{display:flex;justify-content:flex-end;margin-top:12px}
+#nextQ{
+  padding:10px 14px;border-radius:12px;border:1px solid #e5e7eb;background:linear-gradient(180deg,#fff,#eaeaea);
+  font-weight:900;color:#111;cursor:pointer;font-size:clamp(14px,2.8vw,16px);
+  box-shadow:0 8px 18px rgba(0,0,0,.25);transition:transform .12s ease
+}
+#nextQ:hover{transform:translateY(-1px)}
+
+/* rainbow confetti */
+.confetti{
+  position:fixed;left:0;top:0;pointer-events:none;z-index:2000
+}
+.confetto{
+  position:fixed;width:10px;height:12px;opacity:1;will-change:transform,opacity;
+  border-radius:2px;transform:translate3d(0,0,0) rotate(0deg)
+}
+@keyframes confettiFloat {
+  0% {opacity:1;}
+  100% {opacity:0;}
+}
+
 footer{position:fixed;bottom:14px;left:0;right:0;text-align:center;
 color:#d1d5db;font-family:'Cinzel',serif;font-size:clamp(14px,2.4vw,18px);opacity:.9}
 </style>
 </head>
 <body>
 <a href="#" class="back" id="backMenu">⟵ Back to Menu</a>
+
 <div class="wrapper">
 <header>
   <div class="line1">The Boo-riculum</div>
@@ -111,8 +172,14 @@ color:#d1d5db;font-family:'Cinzel',serif;font-size:clamp(14px,2.4vw,18px);opacit
   <div class="card-outer">
     <article class="card" id="card">
       <div id="sparkleContainer"></div>
-      <div class="face front"><div class="term"><h2 id="frontTitle"></h2><p id="frontSub"></p></div></div>
-      <div class="face back"><div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div></div>
+      <!-- Front: English only -->
+      <div class="face visible" id="frontFace">
+        <div class="term"><h2 id="frontTitle"></h2></div>
+      </div>
+      <!-- Back: Japanese + hira/kana -->
+      <div class="face hidden" id="backFace">
+        <div class="term"><h2 id="backTitle"></h2><p id="backSub"></p></div>
+      </div>
     </article>
   </div>
   <div class="controls">
@@ -126,22 +193,67 @@ color:#d1d5db;font-family:'Cinzel',serif;font-size:clamp(14px,2.4vw,18px);opacit
 <section class="stage hidden" id="quizStage">
   <div class="quiz-wrap">
     <div class="qtop"><div class="qprog" id="qprog">1 / 20</div><div class="score" id="score">Score: 0</div></div>
-    <div class="q" id="qbox"><h3 id="qtext"></h3><div class="opts" id="opts"></div>
-    <div class="explain" id="explain"></div><div class="qnav"><button class="btn" id="nextQ">Next ❯</button></div></div>
+    <div class="q" id="qbox">
+      <h3 id="qtext"></h3>
+      <div class="opts" id="opts"></div>
+      <div class="explain" id="explain"></div>
+      <div class="qnav"><button id="nextQ">Next ❯</button></div>
+    </div>
   </div>
 </section>
 </div>
+
 <footer>Bryan's English School</footer>
 
 <script>
-function stripes(a,b,c){return`repeating-linear-gradient(45deg,${a}0%,${a}3%,${b}3%,${b}6%,${c}6%,${c}9%)`}
+/* ---------- utility visuals ---------- */
+function stripes(a,b,c){return`repeating-linear-gradient(45deg,${a} 0%,${a} 3%,${b} 3%,${b} 6%,${c} 6%,${c} 9%)`}
+
 const sparkContainer=document.getElementById("sparkleContainer");
 function triggerSparkles(){for(let n=0;n<35;n++){const s=document.createElement("div");s.className="sparkle";
 s.style.left=Math.random()*100+"%";s.style.bottom=Math.random()*60+"%";s.style.transform=`scale(${0.6+Math.random()*1.4})`;
 s.style.animationDelay=(Math.random()*0.3)+"s";sparkContainer.appendChild(s);setTimeout(()=>s.remove(),2300);}}
-function speak(text){if(!text)return;const filename=text.toLowerCase().replace(/[^a-z0-9]/g,"")+".mp3";
-const path=`audio/${filename}`;const a=new Audio(path);
-a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));}
+
+/* Local Sage audio (no quiz audio) */
+function speak(text){
+  if(!text) return;
+  const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
+  const path=`audio/${filename}`;
+  const a=new Audio(path);
+  a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
+}
+
+/* ---------- rainbow confetti on correct quiz answers ---------- */
+const CONFETTI_COLORS=["#ff004d","#ff7ab6","#ffd300","#00e6ff","#7cff6b","#c77dff","#ff8e00","#00d1b2"];
+function burstConfetti(x=window.innerWidth/2, y=window.innerHeight/2){
+  const N=60; // number of pieces
+  for(let i=0;i<N;i++){
+    const d=document.createElement("div");
+    d.className="confetto";
+    const color=CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+    d.style.background= color;
+    const size = 6 + Math.random()*8;
+    d.style.width = size + "px";
+    d.style.height = (size*1.2) + "px";
+    // start position
+    d.style.left = x + "px";
+    d.style.top  = y + "px";
+    // random trajectory
+    const angle = Math.random()*2*Math.PI;
+    const velocity = 8 + Math.random()*18; // px per frame-ish
+    const dx = Math.cos(angle)*velocity;
+    const dy = Math.sin(angle)*velocity - 8; // kick upward
+    const rot = (Math.random()*720-360);
+    // animate via JS-driven CSS transitions
+    d.style.transition = "transform 900ms cubic-bezier(.2,.8,.2,1), opacity 1000ms ease-out";
+    requestAnimationFrame(()=>{
+      d.style.transform = `translate(${dx*20}px, ${dy*20}px) rotate(${rot}deg)`;
+      d.style.opacity = 0;
+    });
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),1100);
+  }
+}
 
 /* ---------- content ---------- */
 const VOCAB=[{en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
@@ -164,6 +276,7 @@ const VOCAB=[{en:"goal",jp:"目標",hira:"もくひょう",stripes:["#ff7eb9","#
 {en:"study",jp:"勉強",hira:"べんきょう",stripes:["#c77dff","#5ee6ff","#8aff80"]},
 {en:"promise",jp:"約束",hira:"やくそく",stripes:["#fff680","#5ee6ff","#ff7eb9"]},
 {en:"reward",jp:"ごほうび",hira:"ごほうび",stripes:["#5ee6ff","#fff680","#8aff80"]}];
+
 const SENTENCES=[{en:"I will study every day.",jp:"毎日勉強します。",hira:"まいにちべんきょうします",stripes:["#ff7eb9","#5ee6ff","#fff680"]},
 {en:"I’m going to try something new.",jp:"新しいことに挑戦します。",hira:"あたらしいことにちょうせんします",stripes:["#5ee6ff","#fff680","#c77dff"]},
 {en:"I will do my best this year.",jp:"今年は全力を尽くします。",hira:"ことしはぜんりょくをつくします",stripes:["#fff680","#8aff80","#5ee6ff"]},
@@ -184,6 +297,7 @@ const SENTENCES=[{en:"I will study every day.",jp:"毎日勉強します。",hir
 {en:"By March, I will have read five books.",jp:"３月までに本を５冊読んでいるつもりです。",hira:"さんがつまでにほんをごさつよんでいるつもりです",stripes:["#8aff80","#5ee6ff","#fff680"]},
 {en:"I might start running on weekends.",jp:"週末に走り始めるかもしれません。",hira:"しゅうまつにはしりはじめるかもしれません",stripes:["#ff7eb9","#c77dff","#5ee6ff"]},
 {en:"I have decided to keep a study journal.",jp:"勉強ノートを続けることに決めました。",hira:"べんきょうのーとをつづけることにきめました",stripes:["#fff680","#5ee6ff","#8aff80"]}];
+
 const QUESTIONS=[{en:"What goal will you set this month?",jp:"今月はどんな目標を立てますか。",hira:"こんげつはどんなもくひょうをたてますか",stripes:["#5ee6ff","#ff7eb9","#fff680"]},
 {en:"Are you going to try something new this week?",jp:"今週、新しいことに挑戦しますか。",hira:"こんしゅうあたらしいことにちょうせんしますか",stripes:["#8aff80","#5ee6ff","#c77dff"]},
 {en:"When will you start your new habit?",jp:"新しい習慣はいつ始めますか。",hira:"あたらしいしゅうかんはいつはじめますか",stripes:["#fff680","#5ee6ff","#8aff80"]},
@@ -204,6 +318,7 @@ const QUESTIONS=[{en:"What goal will you set this month?",jp:"今月はどんな
 {en:"How will you track your progress?",jp:"進歩をどうやって記録しますか。",hira:"しんぽをどうやってきろくしますか",stripes:["#fff680","#8aff80","#5ee6ff"]},
 {en:"Which habit will be the hardest to keep?",jp:"どの習慣が一番続けにくいですか。",hira:"どのしゅうかんがいちばんつづけにくいですか",stripes:["#ff7eb9","#5ee6ff","#8aff80"]},
 {en:"What will you learn first?",jp:"最初に何を学びますか。",hira:"さいしょになにをまなびますか",stripes:["#5ee6ff","#fff680","#c77dff"]}];
+
 const QUIZ=[{q:"I ___ write my goals tonight.",opts:["am going","am going to","will","going to"],a:2,ex:"Decision at the moment → will."},
 {q:"She is ___ start a diary next week.",opts:["going to","will to","go to","going"],a:0,ex:"Planned intention → going to + base."},
 {q:"We ___ late anymore.",opts:["won't be","aren't be","don't be","not be"],a:0,ex:"Negative future of be → won't be."},
@@ -227,37 +342,115 @@ const QUIZ=[{q:"I ___ write my goals tonight.",opts:["am going","am going to","w
 
 /* helpers + logic */
 function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-let MODE="vocab",idx=0,flipped=false,score=0,qIndex=0,firstAttempt=true,gotIt=false;
-const card=document.getElementById('card'),frontTitle=document.getElementById('frontTitle'),
-backTitle=document.getElementById('backTitle'),backSub=document.getElementById('backSub'),
-cardsStage=document.getElementById('cardsStage'),quizStage=document.getElementById('quizStage'),
-qprog=document.getElementById('qprog'),scoreEl=document.getElementById('score'),
-qtext=document.getElementById('qtext'),opts=document.getElementById('opts'),explain=document.getElementById('explain');
+let MODE="vocab",idx=0,showBack=false,score=0,qIndex=0,firstAttempt=true,gotIt=false;
+
+const card=document.getElementById('card'),
+      frontFace=document.getElementById('frontFace'),
+      backFace=document.getElementById('backFace'),
+      frontTitle=document.getElementById('frontTitle'),
+      backTitle=document.getElementById('backTitle'),
+      backSub=document.getElementById('backSub'),
+      cardsStage=document.getElementById('cardsStage'),
+      quizStage=document.getElementById('quizStage'),
+      qprog=document.getElementById('qprog'),
+      scoreEl=document.getElementById('score'),
+      qtext=document.getElementById('qtext'),
+      opts=document.getElementById('opts'),
+      explain=document.getElementById('explain');
+
 let VOCAB_RUN=shuffle(VOCAB),SENT_RUN=shuffle(SENTENCES),QUES_RUN=shuffle(QUESTIONS),QUIZ_RUN=[];
+
 function activeList(){return MODE==="vocab"?VOCAB_RUN:MODE==="sentences"?SENT_RUN:QUESTIONS}
-function renderCard(){const item=activeList()[idx];
-card.style.backgroundImage=stripes(item.stripes[0],item.stripes[1],item.stripes[2]);
-frontTitle.textContent=item.en;backTitle.textContent=item.jp;backSub.textContent=item.hira;
-card.classList.toggle('is-back',flipped);}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');MODE=b.dataset.mode;idx=0;flipped=false;
-if(MODE==="quiz"){cardsStage.classList.add('hidden');quizStage.classList.remove('hidden');startQuiz();}
-else{quizStage.classList.add('hidden');cardsStage.classList.remove('hidden');renderCard();}});
 
-function startQuiz(){QUIZ_RUN=shuffle(QUIZ);score=0;qIndex=0;showQ();}
-function showQ(){firstAttempt=true;gotIt=false;const item=QUIZ_RUN[qIndex];
-qprog.textContent=`${qIndex+1}/${QUIZ_RUN.length}`;qtext.textContent=item.q;opts.innerHTML="";explain.textContent="";
-item.opts.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=()=>{
-if(gotIt)return;const correct=i===item.a;
-if(correct){b.classList.add('correct');gotIt=true;if(firstAttempt)score++;scoreEl.textContent=`Score:${score}`;explain.textContent=item.ex;[...opts.children].forEach(btn=>btn.disabled=true);}
-else{b.classList.add('wrong');firstAttempt=false;}};opts.appendChild(b);});}
-document.getElementById('nextQ').onclick=()=>{if(qIndex<QUIZ_RUN.length-1){qIndex++;showQ();}
-else{qtext.textContent="Finished! Great job.";opts.innerHTML="";explain.innerHTML=`Your final score <b>${score}</b> / ${QUIZ.length}`;}};
+function renderCard(){
+  const item=activeList()[idx];
+  card.style.backgroundImage=stripes(item.stripes[0],item.stripes[1],item.stripes[2]);
+  frontTitle.textContent=item.en;           // English front only
+  backTitle.textContent=item.jp;            // Japanese back
+  backSub.textContent=item.hira;            // hira/kana back (smaller)
+  if(showBack){
+    frontFace.classList.replace("visible","hidden");
+    backFace.classList.replace("hidden","visible");
+  }else{
+    backFace.classList.replace("visible","hidden");
+    frontFace.classList.replace("hidden","visible");
+  }
+}
 
-document.getElementById('flipBtn').onclick=()=>{flipped=!flipped;renderCard();}
-document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%activeList().length;flipped=false;renderCard();}
-document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+activeList().length)%activeList().length;flipped=false;renderCard();}
-document.getElementById('speakBtn').onclick=()=>{if(MODE==="quiz")return;speak(activeList()[idx].en);}
-document.getElementById('backMenu').onclick=(e)=>{e.preventDefault();if(document.referrer){window.history.back();}else{window.location.href='index.html';}}
+/* tab switching */
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  MODE=b.dataset.mode; idx=0; showBack=false;
+  if(MODE==="quiz"){
+    cardsStage.classList.add('hidden');
+    quizStage.classList.remove('hidden');
+    startQuiz();
+  }else{
+    quizStage.classList.add('hidden');
+    cardsStage.classList.remove('hidden');
+    renderCard();
+  }
+});
+
+/* quiz */
+function startQuiz(){QUIZ_RUN=shuffle(QUIZ);score=0;qIndex=0;scoreEl.textContent="Score: 0";showQ();}
+function showQ(){
+  firstAttempt=true;gotIt=false;
+  const item=QUIZ_RUN[qIndex];
+  qprog.textContent=`${qIndex+1}/${QUIZ_RUN.length}`;
+  qtext.textContent=item.q;opts.innerHTML="";explain.textContent="";
+  item.opts.forEach((t,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';b.textContent=t;
+    b.onclick=(ev)=>{
+      if(gotIt) return;
+      const correct=i===item.a;
+      if(correct){
+        b.classList.add('correct');
+        gotIt=true;
+        if(firstAttempt) score++;
+        scoreEl.textContent=`Score: ${score}`;
+        explain.textContent=item.ex;
+        // Rainbow confetti at click location
+        const rect = b.getBoundingClientRect();
+        burstConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+        [...opts.children].forEach(btn=>btn.disabled=true);
+      }else{
+        b.classList.add('wrong');
+        firstAttempt=false;
+      }
+    };
+    opts.appendChild(b);
+  });
+}
+document.getElementById('nextQ').onclick=()=>{
+  if(qIndex<QUIZ_RUN.length-1){qIndex++;showQ();}
+  else{
+    qtext.textContent="Finished! Great job.";
+    opts.innerHTML="";
+    explain.innerHTML=`Your final score <b>${score}</b> / ${QUIZ.length}`;
+  }
+};
+
+/* card controls */
+document.getElementById('flipBtn').onclick=()=>{showBack=!showBack;renderCard();}
+document.getElementById('nextBtn').onclick=()=>{idx=(idx+1)%activeList().length;showBack=false;renderCard();}
+document.getElementById('prevBtn').onclick=()=>{idx=(idx-1+activeList().length)%activeList().length;showBack=false;renderCard();}
+
+/* audio button — disabled in quiz */
+document.getElementById('speakBtn').onclick=()=>{
+  if(MODE==="quiz") return; // no audio in quiz
+  const item=activeList()[idx];
+  speak(showBack ? item.jp : item.en); // front: English; back: Japanese
+};
+
+/* back to menu */
+document.getElementById('backMenu').onclick=(e)=>{
+  e.preventDefault();
+  if(document.referrer){window.history.back();}else{window.location.href='index.html';}
+};
+
 renderCard();
 </script>
 </body>
