@@ -304,8 +304,7 @@ function burstConfetti(x=window.innerWidth/2, y=window.innerHeight/2){
   }
 }
 
-/* --- Data (vocab/sentences/questions/quiz) --- */
-  /* --- Content (same 20-sets) --- */
+/* --- Content (same 20-sets) --- */
 const VOCAB=[{en:"goal",jp:"目標",hira:"もくひょう"},
 {en:"plan",jp:"計画",hira:"けいかく"},
 {en:"resolution",jp:"決意",hira:"けつい"},
@@ -389,8 +388,6 @@ const QUIZ=[{q:"I ___ write my goals tonight.",opts:["am going","am going to","w
 {q:"___ you join any club this year?",opts:["Do","Did","Will","Are"],a:2,ex:"Will you…?"},
 {q:"I’m not sure, but I ___ start running.",opts:["will","am","am going to","might"],a:3,ex:"Modal of possibility."},
 {q:"By the end of the week, she ___ her desk.",opts:["will tidy","will have tidied","is tidying","has tidy"],a:1,ex:"Future perfect."}];
-
-/* same as before ... (unchanged content) */
 
 /* Helpers */
 function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
