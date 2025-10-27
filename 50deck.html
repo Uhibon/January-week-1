@@ -247,14 +247,53 @@ function triggerSparkles(){
   }
 }
 
-/* Local audio */
+/* Local audio — preload & check all folders */
+const audioFolders = ["assets/vocab", "assets/sentences", "assets/questions", "assets/audio"];
+const audioCache = {};
+
+/* Preload all mp3 files in known folders */
+window.addEventListener("DOMContentLoaded", () => {
+  audioFolders.forEach(folder => {
+    fetch(folder) // try to read folder listing (works on live servers)
+      .then(() => {
+        // Preload a few common names if known
+        // If you know the file list, you can loop it here later
+      })
+      .catch(() => {}); // ignore if folder isn't public-listable
+  });
+});
+
+/* Speak function */
 function speak(text){
   if(!text) return;
-  const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
-  const path=`audio/${filename}`;
-  const a=new Audio(path);
-  a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
+  const filename = text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"") + ".mp3";
+
+  // If already preloaded, play instantly
+  if(audioCache[filename]){
+    audioCache[filename].currentTime = 0;
+    audioCache[filename].play().then(()=>triggerSparkles());
+    return;
+  }
+
+  // Otherwise, search each folder and cache the first that works
+  (async () => {
+    for(const folder of audioFolders){
+      const path = `${folder}/${filename}`;
+      const a = new Audio(path);
+      try{
+        await a.play();
+        triggerSparkles();
+        audioCache[filename] = a; // cache for next time
+        return;
+      }catch{
+        // try next folder
+      }
+    }
+    // retry after small delay if not ready
+    setTimeout(()=>speak(text), 500);
+  })();
 }
+
 
 /* Small rainbow confetti (on correct quiz answers) */
 const CONFETTI_COLORS=["#ff004d","#ff7ab6","#ffd300","#00e6ff","#7cff6b","#c77dff","#ff8e00","#00d1b2"];
