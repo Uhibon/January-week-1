@@ -185,7 +185,7 @@ function triggerSparkles(){
 function speak(text){
   if(!text)return;
   const filename=text.toLowerCase().replace(/[^a-z0-9ぁ-んァ-ン一-龯]/g,"")+".mp3";
-  const path=`audio/${filename}`;
+  const path=`assets/audio/${filename}`;
   const a=new Audio(path);
   a.play().then(()=>triggerSparkles()).catch(()=>setTimeout(()=>a.play(),400));
 }
